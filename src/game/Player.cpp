@@ -13445,16 +13445,40 @@ void Player::CompleteQuest(uint32 quest_id)
     }
 }
 
+uint32 Player::Getjf() const  //只做读取积分数量的处理,不能更改
+{
+	QueryResult *result;
+	result = LoginDatabase.PQuery("SELECT `jifen` FROM `account` WHERE `id` = '%u'", GetSession()->GetAccountId());
+	if (result)
+	{
+		uint32 a = result->Fetch()[0].GetUInt32();;
+		delete result;
+		return a;
+	}
+	delete result;
+	return 0;
+}
+
+void Player::Modifyjifen(int32 d)  //积分处理增加或者减少处理.
+{
+	int32 jfuser = Getjf();
+	int32 Newjifen = jfuser + d;
+	if (Newjifen < 0)
+		LoginDatabase.PExecute("UPDATE `account` SET `jifen` = '0' WHERE `id` = '%u'", GetSession()->GetAccountId());
+	else
+		LoginDatabase.PExecute("UPDATE `account` SET `jifen` = '%u' WHERE `id` = '%u'", Newjifen, GetSession()->GetAccountId());
+}
+
 void Player::IncompleteQuest(uint32 quest_id)
 {
-    if (quest_id)
-    {
-        SetQuestStatus(quest_id, QUEST_STATUS_INCOMPLETE);
+	if (quest_id)
+	{
+		SetQuestStatus(quest_id, QUEST_STATUS_INCOMPLETE);
 
-        uint16 log_slot = FindQuestSlot(quest_id);
-        if (log_slot < MAX_QUEST_LOG_SIZE)
-            RemoveQuestSlotState(log_slot, QUEST_STATE_COMPLETE);
-    }
+		uint16 log_slot = FindQuestSlot(quest_id);
+		if (log_slot < MAX_QUEST_LOG_SIZE)
+			RemoveQuestSlotState(log_slot, QUEST_STATE_COMPLETE);
+	}
 }
 
 void Player::RewardQuest(Quest const* pQuest, uint32 reward, Object* questGiver, bool announce)
