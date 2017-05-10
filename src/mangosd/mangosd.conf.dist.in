@@ -1,4 +1,4 @@
-#####################################
+﻿#####################################
 # MaNGOS Configuration file         #
 #####################################
 
@@ -1543,3 +1543,299 @@ SOAP.Port = 7878
 CharDelete.Method = 0
 CharDelete.MinLevel = 0
 CharDelete.KeepDays = 30
+
+AutoBroadcast.On = 0
+AutoBroadcast.Center = 2
+AutoBroadcast.Timer = 1800000
+
+########################################################################
+###########################################
+# OUTDOOR PVP CONFIG
+#
+#    OutdoorPvp.SIEnabled               #Enable Silithus Outdoor pvp
+#    OutdoorPvp.EPEnabled               #Enable Eastern Plaguelands
+#    Outdoor pvp
+#        Default: 1 (enable)
+#                 0 (disable)
+#
+########################################################################
+###########################################
+Rate.Creature.Normal.HP_ZUG = 1
+Rate.Creature.Elite.Elite.HP_ZUG = 1
+Rate.Creature.Elite.RAREELITE.HP_ZUG = 1
+Rate.Creature.Elite.WORLDBOSS.HP_ZUG = 1.15
+Rate.Creature.Elite.RARE.HP_ZUG = 1
+
+Rate.Creature.Normal.DAMAGE_ZUG = 1.2
+Rate.Creature.Elite.Elite.DAMAGE_ZUG = 1.2
+Rate.Creature.Elite.RAREELITE.DAMAGE_ZUG = 1.2
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_ZUG = 1.2
+Rate.Creature.Elite.RARE.DAMAGE_ZUG = 1.2
+
+Rate.Creature.Normal.SPELLDAMAGE_ZUG = 1.2
+Rate.Creature.Elite.Elite.SPELLDAMAGE_ZUG = 1.2
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_ZUG = 1.2
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_ZUG = 1.2
+Rate.Creature.Elite.RARE.SPELLDAMAGE_ZUG = 1.2
+=============================================
+Rate.Creature.Normal.HP_FX = 1
+Rate.Creature.Elite.Elite.HP_FX = 1
+Rate.Creature.Elite.RAREELITE.HP_FX = 1
+Rate.Creature.Elite.WORLDBOSS.HP_FX = 1
+Rate.Creature.Elite.RARE.HP_FX = 1
+
+Rate.Creature.Normal.DAMAGE_FX = 1.5
+Rate.Creature.Elite.Elite.DAMAGE_FX = 1.5
+Rate.Creature.Elite.RAREELITE.DAMAGE_FX = 1.5
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_FX = 1.5
+Rate.Creature.Elite.RARE.DAMAGE_FX = 1.5
+
+Rate.Creature.Normal.SPELLDAMAGE_FX = 1.5
+Rate.Creature.Elite.Elite.SPELLDAMAGE_FX = 1.5
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_FX = 1.5
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_FX = 1.5
+Rate.Creature.Elite.RARE.SPELLDAMAGE_FX = 1.5
+=============================================
+Rate.Creature.Normal.HP_MC = 1
+Rate.Creature.Elite.Elite.HP_MC = 1
+Rate.Creature.Elite.RAREELITE.HP_MC = 1
+Rate.Creature.Elite.WORLDBOSS.HP_MC = 1.15
+Rate.Creature.Elite.RARE.HP_MC = 1
+
+Rate.Creature.Normal.DAMAGE_MC = 1.3
+Rate.Creature.Elite.Elite.DAMAGE_MC = 1.3
+Rate.Creature.Elite.RAREELITE.DAMAGE_MC = 1.3
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_MC = 1.3
+Rate.Creature.Elite.RARE.DAMAGE_MC = 1.3
+
+Rate.Creature.Normal.SPELLDAMAGE_MC = 1.3
+Rate.Creature.Elite.Elite.SPELLDAMAGE_MC = 1.3
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_MC = 1.3
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_MC = 1.3
+Rate.Creature.Elite.RARE.SPELLDAMAGE_MC = 1.3
+=============================================
+Rate.Creature.Normal.HP_HL = 1
+Rate.Creature.Elite.Elite.HP_HL = 1
+Rate.Creature.Elite.RAREELITE.HP_HL = 1
+Rate.Creature.Elite.WORLDBOSS.HP_HL = 1.15
+Rate.Creature.Elite.RARE.HP_HL = 1
+
+Rate.Creature.Normal.DAMAGE_HL = 1
+Rate.Creature.Elite.Elite.DAMAGE_HL = 1
+Rate.Creature.Elite.RAREELITE.DAMAGE_HL = 1
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_HL = 1
+Rate.Creature.Elite.RARE.DAMAGE_HL = 1
+
+Rate.Creature.Normal.SPELLDAMAGE_HL = 1
+Rate.Creature.Elite.Elite.SPELLDAMAGE_HL = 1
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_HL = 1
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_HL = 1
+Rate.Creature.Elite.RARE.SPELLDAMAGE_HL = 1
+=============================================
+Rate.Creature.Normal.HP_BWL = 1
+Rate.Creature.Elite.Elite.HP_BWL = 1
+Rate.Creature.Elite.RAREELITE.HP_BWL = 1
+Rate.Creature.Elite.WORLDBOSS.HP_BWL = 1.15
+Rate.Creature.Elite.RARE.HP_BWL = 1
+
+Rate.Creature.Normal.DAMAGE_BWL = 1
+Rate.Creature.Elite.Elite.DAMAGE_BWL = 1
+Rate.Creature.Elite.RAREELITE.DAMAGE_BWL = 1
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_BWL = 1
+Rate.Creature.Elite.RARE.DAMAGE_BWL = 1
+
+Rate.Creature.Normal.SPELLDAMAGE_BWL = 1
+Rate.Creature.Elite.Elite.SPELLDAMAGE_BWL = 1
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_BWL = 1
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_BWL = 1
+Rate.Creature.Elite.RARE.SPELLDAMAGE_BWL = 1
+=============================================
+Rate.Creature.Normal.HP_TAQ = 1
+Rate.Creature.Elite.Elite.HP_TAQ = 1
+Rate.Creature.Elite.RAREELITE.HP_TAQ = 1
+Rate.Creature.Elite.WORLDBOSS.HP_TAQ = 1.15
+Rate.Creature.Elite.RARE.HP_TAQ = 1
+
+Rate.Creature.Normal.DAMAGE_TAQ = 1
+Rate.Creature.Elite.Elite.DAMAGE_TAQ = 1
+Rate.Creature.Elite.RAREELITE.DAMAGE_TAQ = 1
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_TAQ = 1.1
+Rate.Creature.Elite.RARE.DAMAGE_TAQ = 1
+
+Rate.Creature.Normal.SPELLDAMAGE_TAQ = 1
+Rate.Creature.Elite.Elite.SPELLDAMAGE_TAQ = 1
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_TAQ = 1
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_TAQ = 1.1
+Rate.Creature.Elite.RARE.SPELLDAMAGE_TAQ = 1
+=============================================
+Rate.Creature.Normal.HP_NAXX = 1
+Rate.Creature.Elite.Elite.HP_NAXX = 1
+Rate.Creature.Elite.RAREELITE.HP_NAXX = 1
+Rate.Creature.Elite.WORLDBOSS.HP_NAXX = 1.15
+Rate.Creature.Elite.RARE.HP_NAXX = 1
+
+Rate.Creature.Normal.DAMAGE_NAXX = 1
+Rate.Creature.Elite.Elite.DAMAGE_NAXX = 1
+Rate.Creature.Elite.RAREELITE.DAMAGE_NAXX = 1
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_NAXX = 1
+Rate.Creature.Elite.RARE.DAMAGE_NAXX = 1
+
+Rate.Creature.Normal.SPELLDAMAGE_NAXX = 1
+Rate.Creature.Elite.Elite.SPELLDAMAGE_NAXX = 1
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_NAXX = 1
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_NAXX = 1
+Rate.Creature.Elite.RARE.SPELLDAMAGE_NAXX = 1
+=============================================
+Rate.Creature.Normal.HP_AS = 1.2
+Rate.Creature.Elite.Elite.HP_AS = 1.2
+Rate.Creature.Elite.RAREELITE.HP_AS = 1.2
+Rate.Creature.Elite.WORLDBOSS.HP_AS = 1.2
+Rate.Creature.Elite.RARE.HP_AS = 1.2
+
+Rate.Creature.Normal.DAMAGE_AS = 1.25
+Rate.Creature.Elite.Elite.DAMAGE_AS = 1.25
+Rate.Creature.Elite.RAREELITE.DAMAGE_AS = 1.25
+Rate.Creature.Elite.WORLDBOSS.DAMAGE_AS = 1.25
+Rate.Creature.Elite.RARE.DAMAGE_AS = 1.25
+
+Rate.Creature.Normal.SPELLDAMAGE_AS = 1.1
+Rate.Creature.Elite.Elite.SPELLDAMAGE_AS = 1.1
+Rate.Creature.Elite.RAREELITE.SPELLDAMAGE_AS = 1.1
+Rate.Creature.Elite.WORLDBOSS.SPELLDAMAGE_AS = 1.1
+Rate.Creature.Elite.RARE.SPELLDAMAGE_AS = 1.1
+=============================================
+OutdoorPvp.SIEnabled   = 0
+OutdoorPvp.EPEnabled   = 1
+OutdoorPvP.EYEnabled   = 1
+OutdoorPvP.TSEnabled   = 1
+OutdoorPvP.ZUGEnabled  = 1
+OutdoorPvP.FXEnabled   = 1
+HonorableKillPoints    = 1
+GroupLeaderReconnectPeriod = 120
+Maintenance.TimerChecker = 1000
+
+Anticheat.Movement.Enable = 1
+Anticheat.Movement.AlarmCount = 5
+Anticheat.Movement.AlarmTime = 1000
+Anticheat.Movement.Kill = 1
+Anticheat.Movement.Kick = 1
+Anticheat.Movement.BanType = 0
+Anticheat.Movement.BanTime = 60
+Anticheat.Movement.MaxXYT = 0.008
+Anticheat.Movement.MaxXGJZQ = 0.016
+Anticheat.Movement.MaxXPTZQ = 0.013
+Anticheat.Movement.MaxXPTGH = 0.011
+Anticheat.Movement.MaxXGJGH = 0.014
+Anticheat.Movement.MaxXGJYY = 0.012
+Anticheat.Movement.MaxXGJBX = 0.012
+Anticheat.Movement.MaxXDBX  = 0.012
+Anticheat.Movement.IgnoreSecAfterTeleport = 5
+Anticheat.Movement.GmLevel = 0
+
+MapUpdate.Threads = 10
+VMSS.Enable = 1
+VMSS.MaxThreadBreaks = 5
+VMSS.ThreadBreakRememberTime = 600
+VMSS.MapFreeMethod = 0
+VMSS.FreezeCheckPeriod = 1000
+VMSS.MapFreezeDetectTime = 2000
+VMSS.TrySkipFirstThreadBreak = 1
+VMSS.ForceUnloadDelay = 3000
+MapUpdate.DynamicThreadsCount = 1
+MapUpdate.LoadBalanceHighValue = 0.8
+MapUpdate.LoadBalanceLowValue = 0.2
+
+
+Honor1.TimeStart        = 27000
+Honor1.TimeEnd          = 37800
+Honor2.TimeStart        = 41400
+Honor2.TimeEnd          = 64800
+
+Honor1.TimeStart_ZhouMo = 27000
+Honor1.TimeEnd_ZhouMo   = 37800
+Honor2.TimeStart_ZhouMo = 37800
+Honor2.TimeEnd_ZhouMo   = 68400
+
+PlayerHonorMax         = 25000
+Battleground.CFBG      = 0
+Battleground.Jiance    = 1
+Battleground.IP_PlayerCont = 1
+Battleground.Player_Winner = 8
+Battleground.Player_Loser  = 8
+Battleground.Time = 300000
+Battleground.MinDamage = 10000
+Battleground.MinHealingDone = 10000
+MaintenanceDayXp6 = 6
+MaintenanceDayXp7 = 7
+AccountInstancesPerHour.DaKai = 1
+AccountInstancesPerHour = 5
+FeiJi.ShunFei = 0
+
+Rate.Reputation.Gain_AV = 2
+Rate.Reputation.Gain_WS = 2
+Rate.Reputation.Gain_AB = 2
+
+Safe.Lock = 0
+
+TradeLog = "TradeLog.log"
+TradeLogTimestamp = 1
+LootLog = "LootLog.log"
+LootLogTimestamp = 1
+BugLog = "BugLog.log"
+BugLogTimestamp = 1
+BattleGroundLog = "BattleGroundLog.log"
+BattleGroundLogTimestamp = 1
+Taq.KaiMenRenWu = 1
+Rate.XiouLiFei = 1.3
+
+ChatFlood.PlayerMessageCount = 1
+ChatFlood.PlayerMessageDelay = 300
+ChatFlood.PlayerMuteTime = 300
+
+BattleGround.Mail = 0
+
+Rate.Creature.Normal.Time    = 5
+Rate.Creature.Elite.Time     = 10
+Rate.Creature.Rareelite.Time = 10
+Rate.Creature.WorldBoss.Time = 20
+Rate.Creature.Rare.Time      = 10
+#########################################
+#
+#    假人倍数开关  
+#
+#  MaxDummy 达到多少人后开始增加假人
+#  AddNumberDummy 假人倍数
+########################################
+Dummy.On.Off = 0
+MaxDummy = 25
+AddNumberDummy = 3
+
+#######  积分泡点系统开关  #########
+#  OnlineGift    0关闭/1开启
+#   Time在线多久发放
+#   Itemid 物品代码 （如果=0则不发放物品）
+#   Itemcount 物品数量
+#   jifen 积分数量
+######################################
+Customsys.OnlineGift = 0
+Customsys.OnlineGift.Time = 3600
+Customsys.OnlineGift.Itemid = 0
+Customsys.OnlineGift.Itemcount = 0
+Customsys.OnlineGift.Jifen = 0
+Customsys.OnlineGift.Money = 0
+Command.aoshan = 1
+####################################
+#   pvp公告开关
+#   AH 拍卖行公告
+#   Logn玩家上线公告 
+#
+#####################################
+World.PVP.On = 0
+World.AH.On = 0
+World.Logn.On = 0
+
+#######################################################################
+#        世界聊天开关=1开启世界聊天功能，并消耗Money。
+#######################################################################
+World.Chat.On = 0
+World.Chat.Money = 10000
