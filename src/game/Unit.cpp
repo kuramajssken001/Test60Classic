@@ -725,7 +725,10 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
 			{
 				MapEntry const* mapEntry = sMapStore.LookupEntry(pUnit->GetMapId());
 				sLog.outLoot("[BOSS]Name = %s, InstanceId = %u, MapId = %u, PlayerName = %s [%s]", pVictim->GetName(), pUnit->GetInstanceId(), pUnit->GetMapId(), pUnit->GetName(), (mapEntry ? mapEntry->name[((Player*)pUnit)->GetSession()->GetSessionDbcLocale()] : "<unknown>"));
-				if (pVictim->GetEntry() == 15956 || pVictim->GetEntry() == 15953 || pVictim->GetEntry() == 15954 || pVictim->GetEntry() == 16061)
+				if (pVictim->GetEntry() == 15956 || pVictim->GetEntry() == 15953 || pVictim->GetEntry() == 15954 || pVictim->GetEntry() == 16061
+					|| pVictim->GetEntry() == 11502 || pVictim->GetEntry() == 12098 || pVictim->GetEntry() == 11988 || pVictim->GetEntry() == 12056 || pVictim->GetEntry() == 12264 || pVictim->GetEntry() == 12057 || pVictim->GetEntry() == 12259 || pVictim->GetEntry() == 11982 || pVictim->GetEntry() == 12118
+					|| pVictim->GetEntry() == 11583 || pVictim->GetEntry() == 14020 || pVictim->GetEntry() == 11981 || pVictim->GetEntry() == 14601 || pVictim->GetEntry() == 11983 || pVictim->GetEntry() == 12017 || pVictim->GetEntry() == 13020 || pVictim->GetEntry() == 12435
+					|| pVictim->GetEntry() == 15727 || pVictim->GetEntry() == 15544 || pVictim->GetEntry() == 15543 || pVictim->GetEntry() == 15517 || pVictim->GetEntry() == 15516 || pVictim->GetEntry() == 15511 || pVictim->GetEntry() == 15510 || pVictim->GetEntry() == 15509 || pVictim->GetEntry() == 15299 || pVictim->GetEntry() == 15276 || pVictim->GetEntry() == 15275 || pVictim->GetEntry() == 15263)
 				{
 					if (((Player*)pUnit)->GetGuildId())
 					{
@@ -752,6 +755,93 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
 								else
 								if (pVictim->GetEntry() == 16061)
 									sWorld.SendWorldText(LANG_GONGGAO_34, targetGuild->GetName().c_str(), pVictim->GetName());
+								else//MC副本BOSS
+								if (pVictim->GetEntry() == 11502)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12098)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11988)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12056)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12264)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12057)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12259)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11982)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12118)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11583)//BWL副本BOSS
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 14020)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11981)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 14601)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11983)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12017)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 13020)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12435)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15727)//TAQ副本BOSS
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15544)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15543)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15517)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15516)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15511)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15510)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15509)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15299)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15276)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15275)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15263)
+									sWorld.SendWorldText(LANG_GONGGAO_37, targetGuild->GetName().c_str(), pVictim->GetName());
 							}
 						}
 						else
@@ -778,15 +868,102 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
 								else
 								if (pVictim->GetEntry() == 16061)
 									sWorld.SendWorldText(LANG_GONGGAO_35, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else//MC副本BOSS
+								if (pVictim->GetEntry() == 11502)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12098)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11988)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12056)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12264)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12057)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12259)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11982)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12118)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11583)//BWL副本BOSS
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 14020)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11981)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 14601)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 11983)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12017)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 13020)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 12435)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15727)//TAQ副本BOSS
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15544)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15543)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15517)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15516)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15511)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15510)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15509)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15299)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15276)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15275)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
+								else
+								if (pVictim->GetEntry() == 15263)
+									sWorld.SendWorldText(LANG_GONGGAO_38, targetGuild->GetName().c_str(), ((Player*)pUnit)->GetPlayerTeam(((Player*)pUnit)->GetTeam()), pVictim->GetName());
 							}
 						}
 
-						if (!sWorld.WorldBossId(pVictim->GetEntry()))
+						/*if (!sWorld.WorldBossId(pVictim->GetEntry()))
 						{
 							sWorld.SetBossId(pVictim->GetEntry());
 							if (sWorld.ChaXunBossFdId() == 3)
 								sWorld.SendWorldText(LANG_GONGGAO_36);
-						}
+						}*/
 					}
 				}
 			}
@@ -871,6 +1048,17 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
 
             if (player_tap)                                 // PvP kill
             {
+				if (sWorld.getConfig(CONFIG_BOOL_WORLD_PVP_ON))
+				{
+					AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(pVictim->GetAreaId());
+					std::string uAreaName = "<unknown>";
+					if (areaEntry)
+						uAreaName = areaEntry->area_name[sWorld.GetDefaultDbcLocale()];
+					if (player_tap != pVictim)
+					{
+						sWorld.SendWorldText(4002, player_tap->GetName(), player_tap->getLevel(), uAreaName.c_str(), pVictim->GetName(), pVictim->getLevel());
+					}
+				}
                 if (BattleGround* bg = playerVictim->GetBattleGround())
                 {
                     bg->HandleKillPlayer(playerVictim, player_tap);
@@ -3584,6 +3772,12 @@ bool Unit::AddSpellAuraHolder(SpellAuraHolder* holder)
 						if (foundHolder->GetCasterGuid() != holder->GetCasterGuid())
 						{
 							if (GetSpellSpecific(aurSpellInfo->Id) == SPELL_BLESSING || aurSpellInfo->SpellIconID == 92)
+							{
+								RemoveSpellAuraHolder(foundHolder, AURA_REMOVE_BY_STACK);
+								stop = true;
+								break;
+							}
+							if (aurSpellInfo->SpellIconID == 239)
 							{
 								RemoveSpellAuraHolder(foundHolder, AURA_REMOVE_BY_STACK);
 								stop = true;

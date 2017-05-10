@@ -903,6 +903,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         static void InitVisibleBits();
 
         void AddToWorld() override;
+		time_t m_getLastMbTime;
         void RemoveFromWorld() override;
 
         bool TeleportTo(uint32 mapid, float x, float y, float z, float orientation, uint32 options = 0, AreaTrigger const* at = NULL);
@@ -1119,6 +1120,9 @@ class MANGOS_DLL_SPEC Player : public Unit
 		void GroupQuest(uint32 quest1, uint32 quest2, uint32 money, Player* _player, uint32 placout);
 		void HueiSitem(uint32 item1, uint32 item2, uint32 item3, uint32 item4, uint32 item5, uint32 item7, uint32 item8, uint32 item9, uint32 item11, uint32 cout, uint32 Class_, uint32 HasitemId1, uint32 Hascount1, Player *player, uint32 HasitemId, uint32 Hascount);
 		void setRemoveSpellPlayerCooldown(Player* player, uint32 categoryid, uint32 jf, bool leixing = false);
+		void Setshunfei();
+		void SetCdspeed();
+		void SetTowTf();
 		void SetMoneyZheKoua(uint32 ItemId1, uint32 Itemcont1, uint32 ItemId2, uint32 Itemcont2);
 		void SetHuoLiZheKoua(uint32 ItemId, uint32 Itemcont);
 		void SetCdSuoDuan(uint32 ItemId1, uint32 Itemcont1, uint32 ItemId2, uint32 Itemcont2);
@@ -1254,6 +1258,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         void SendItemDurations();
         void LoadCorpse();
         void LoadPet();
+		bool AddItem(uint32 itemId, uint32 count);
 		uint32 GetPlayerTalentsCost(){ return m_resetTalentsCost; }
 		void SetPlayerTalentsCost(time_t time){ m_resetTalentsCost = time; }
 		time_t GetPlayerTalentsTime(){ return m_resetTalentsTime; }
@@ -1880,8 +1885,10 @@ class MANGOS_DLL_SPEC Player : public Unit
 		uint32 GetPlayerRacePlayerBytes2();
 		void GetYangMao(std::string& getname, uint32& getguid);
 		void SetYangMao(uint32 guid, uint32 itemida, uint32 conta, uint32 itemidb, uint32 contb);
+		void SetYM(uint32 guid, uint32 jifen, Player* _player);
 		std::string GetItemName(uint32 entry) const;
 		std::string GetZiZhiName(uint32 id) const;
+		std::string GetZiZhiGossip(uint32 id) const;
 		std::string GetPlayerIp() const;
         void UpdateCorpseReclaimDelay();
 		void Setjifen(int32 jifen);

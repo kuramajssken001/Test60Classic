@@ -115,8 +115,8 @@ void BattleGroundAB::Update(uint32 diff)
                 m_ReputationScoreTics[team] += BG_AB_TickPoints[points];
                 if (m_ReputationScoreTics[team] >= m_ReputationTics)
                 {
-					(team == TEAM_INDEX_ALLIANCE) ? RewardReputationToTeam(509, !sWorld.BattleGroundWeek() ? 10 : 20, ALLIANCE) : RewardReputationToTeam(510, !sWorld.BattleGroundWeek() ? 10 : 20, HORDE);
-                    m_ReputationScoreTics[team] -= m_ReputationTics;
+					(team == TEAM_INDEX_ALLIANCE) ? RewardReputationToTeam(509, 10, ALLIANCE) : RewardReputationToTeam(510, 10, HORDE);//阿拉希声望更改
+					m_ReputationScoreTics[team] -= m_ReputationTics;
                 }
                 if (m_honorScoreTicks[team] >= m_honorTicks)
                 {
@@ -144,9 +144,9 @@ void BattleGroundAB::Update(uint32 diff)
 
         // Test win condition
         if (m_TeamScores[TEAM_INDEX_ALLIANCE] >= BG_AB_MAX_TEAM_SCORE)
-            EndBattleGround(ALLIANCE);
+			BattleGroundAB::EndBattleGround(ALLIANCE);
         if (m_TeamScores[TEAM_INDEX_HORDE] >= BG_AB_MAX_TEAM_SCORE)
-            EndBattleGround(HORDE);
+			BattleGroundAB::EndBattleGround(HORDE);
     }
 }
 

@@ -35,6 +35,7 @@
 #include "Mail.h"
 #include "Util.h"
 #include "SpellMgr.h"
+#include "Config/Config.h"
 #ifdef _DEBUG_VMAPS
 #include "VMapFactory.h"
 #endif
@@ -135,26 +136,50 @@ bool ChatHandler::HandleAnnounceCommand(char* args)
 bool ChatHandler::HandleSjCommand(char* args)
 {
 	Player* player = m_session->GetPlayer();
+	uint32 ChatOn = sConfig.GetIntDefault("World.Chat.On", 0);
+	uint32 playermoney = player->GetMoney();
+	uint32 money = sConfig.GetIntDefault("World.Chat.Money", 0);
 
-	if (!player)
-		return false;
-
-	if (player->getLevel() >= 20)
-		return false;
-
-	if (!player->CanSpeak())
+	if (ChatOn == 1)
 	{
-		std::string timeStr = secsToTimeString(player->GetSession()->m_muteTime - time(NULL));
-		player->GetSession()->SendNotification(GetMangosString(LANG_WAIT_BEFORE_SPEAKING), timeStr.c_str());
-		return false;
+		if (playermoney < money)
+			return false;
+
+		if (!player)
+			return false;
+
+		if (player->getLevel() <= 9)
+			return false;
+
+		if (!player->CanSpeak())
+		{
+			std::string timeStr = secsToTimeString(player->GetSession()->m_muteTime - time(NULL));
+			player->GetSession()->SendNotification(GetMangosString(LANG_WAIT_BEFORE_SPEAKING), timeStr.c_str());
+			return false;
+		}
+
+		if (!*args)
+			return false;
+
+		player->UpdateSpeakTime();
+		if (player->GetTeam() == ALLIANCE)
+		{
+			sWorld.SendWorldText(4005, GetNameLink(player).c_str(), args);
+			player->ModifyMoney(-(money));
+		}
+		else
+		{
+			sWorld.SendWorldText(4006, GetNameLink(player).c_str(), args);
+			player->ModifyMoney(-(money));
+		}
+		return true;
 	}
+}
 
-	player->UpdateSpeakTime();
-
-	if (!*args)
-		return false;
-
-	sWorld.SendWorldTeamText(player, LANG_GONGGAO_16, player->GetName(), player->GetName(), args);
+bool ChatHandler::HandleHonorTestCommand(char* args)
+{
+	sWorld.ServerMaintenanceStart();
+	sObjectMgr.LoadStandingList();
 	return true;
 }
 
@@ -611,7 +636,7 @@ bool ChatHandler::HandleGonameCommand(char* args)
 
         PSendSysMessage(LANG_APPEARING_AT, chrNameLink.c_str());
         if (needReportToTarget(target))
-            ChatHandler(target).PSendSysMessage(LANG_APPEARING_TO, GetNameLink().c_str());
+            //ChatHandler(target).PSendSysMessage(LANG_APPEARING_TO, GetNameLink().c_str()); ÆÁ±Î×·×ÙÐÅÏ¢
 
         // stop flight if need
         if (_player->IsTaxiFlying())

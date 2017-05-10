@@ -367,22 +367,22 @@ void WorldSession::HandlePetSetAction(WorldPacket& recv_data)
 
     recv_data >> petGuid;
 
-    Creature* pet = _player->GetMap()->GetAnyTypeCreature(petGuid);
+    Creature* petUnit = _player->GetMap()->GetAnyTypeCreature(petGuid);
 
-    if (!pet || (pet != _player->GetPet() && pet != _player->GetCharm()))
+	if (!petUnit || (petUnit != _player->GetPet() && petUnit != _player->GetCharm()))
     {
         sLog.outError("HandlePetSetAction: Unknown pet or pet owner.");
         return;
     }
 
     // pet can have action bar disabled
-    if (pet->IsPet() && ((Pet*)pet)->GetModeFlags() & PET_MODE_DISABLE_ACTIONS)
+	if (petUnit->IsPet() && ((Pet*)petUnit)->GetModeFlags() & PET_MODE_DISABLE_ACTIONS)
         return;
 
-    CharmInfo* charmInfo = pet->GetCharmInfo();
+	CharmInfo* charmInfo = petUnit->GetCharmInfo();
     if (!charmInfo)
     {
-        sLog.outError("WorldSession::HandlePetSetAction: object (GUID: %u TypeId: %u) is considered pet-like but doesn't have a charminfo!", pet->GetGUIDLow(), pet->GetTypeId());
+		sLog.outError("WorldSession::HandlePetSetAction: object (GUID: %u TypeId: %u) is considered pet-like but doesn't have a charminfo!", petUnit->GetGUIDLow(), petUnit->GetTypeId());
         return;
     }
 
@@ -447,23 +447,23 @@ void WorldSession::HandlePetSetAction(WorldPacket& recv_data)
         DETAIL_LOG("Player %s has changed pet spell action. Position: %u, Spell: %u, State: 0x%X", _player->GetName(), position[i], spell_id, uint32(act_state));
 
         // if it's act for spell (en/disable/cast) and there is a spell given (0 = remove spell) which pet doesn't know, don't add
-        if (!((act_state == ACT_ENABLED || act_state == ACT_DISABLED || act_state == ACT_PASSIVE) && spell_id && !pet->HasSpell(spell_id)))
+		if (!((act_state == ACT_ENABLED || act_state == ACT_DISABLED || act_state == ACT_PASSIVE) && spell_id && !petUnit->HasSpell(spell_id)))
         {
             // sign for autocast
             if (act_state == ACT_ENABLED && spell_id)
             {
-                if (pet->isCharmed())
+				if (petUnit->isCharmed())
                     charmInfo->ToggleCreatureAutocast(spell_id, true);
                 else
-                    ((Pet*)pet)->ToggleAutocast(spell_id, true);
+					((Pet*)petUnit)->ToggleAutocast(spell_id, true);
             }
             // sign for no/turn off autocast
             else if (act_state == ACT_DISABLED && spell_id)
             {
-                if (pet->isCharmed())
+				if (petUnit->isCharmed())
                     charmInfo->ToggleCreatureAutocast(spell_id, false);
                 else
-                    ((Pet*)pet)->ToggleAutocast(spell_id, false);
+					((Pet*)petUnit)->ToggleAutocast(spell_id, false);
             }
 
             charmInfo->SetActionBar(position[i], spell_id, ActiveStates(act_state));

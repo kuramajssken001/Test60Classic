@@ -27,6 +27,7 @@
 #include "CreatureAI.h"
 #include "Unit.h"
 #include "Util.h"
+#include "Chat.h"
 
 // numbers represent minutes * 100 while happy (you get 100 loyalty points per min while happy)
 uint32 const LevelUpLoyalty[6] =
@@ -543,7 +544,7 @@ void Pet::Update(uint32 update_diff, uint32 diff)
 {
     if (m_removed)                                          // pet already removed, just wait in remove queue, no updates
         return;
-
+	
     switch (m_deathState)
     {
         case CORPSE:
@@ -939,6 +940,8 @@ void Pet::GivePetXP(uint32 xp)
     // pet not receive xp for level equal to owner level
     if (level >= maxlevel)
         return;
+
+	xp *= sWorld.getConfig(CONFIG_FLOAT_RATE_PET_XP_KILL);
 
     uint32 nextLvlXP = GetUInt32Value(UNIT_FIELD_PETNEXTLEVELEXP);
     uint32 curXP = GetUInt32Value(UNIT_FIELD_PETEXPERIENCE);

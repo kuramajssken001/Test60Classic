@@ -35,6 +35,7 @@
 #include "Formulas.h"
 #include "GridNotifiersImpl.h"
 #include "Chat.h"
+#include "Config/Config.h"
 
 namespace MaNGOS
 {
@@ -691,13 +692,44 @@ void BattleGround::RewardReputationToTeam(uint32 faction_id, uint32 Reputation, 
 {
     FactionEntry const* factionEntry = sFactionStore.LookupEntry(faction_id);
 
-    if (!factionEntry)
-        return;
+	if (!factionEntry)
+		return;
+	if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+	{
+		// switch to the opposite faction//Õ½³¡»ìÅÅ
+		FactionEntry const* factionEntry2 = sFactionStore.LookupEntry(faction_id);
+		switch (faction_id)
+		{
+		case 729:
+			factionEntry2 = sFactionStore.LookupEntry(730);
+			break;
+		case 730:
+			factionEntry2 = sFactionStore.LookupEntry(729);
+			break;
+		case 889:
+			factionEntry2 = sFactionStore.LookupEntry(890);
+			break;
+		case 890:
+			factionEntry2 = sFactionStore.LookupEntry(889);
+			break;
+		case 509:
+			factionEntry2 = sFactionStore.LookupEntry(510);
+			break;
+		case 510:
+			factionEntry2 = sFactionStore.LookupEntry(509);
+			break;
+		default:
+			break;
+		}
 
-    for (BattleGroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
-    {
-        if (itr->second.OfflineRemoveTime)
-            continue;
+		if (!factionEntry2)
+			return;
+		//=========================end==================
+	}
+	for (BattleGroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
+	{
+		if (itr->second.OfflineRemoveTime)
+			continue;
 
         Player* plr = sObjectMgr.GetPlayer(itr->first);
 
@@ -711,8 +743,27 @@ void BattleGround::RewardReputationToTeam(uint32 faction_id, uint32 Reputation, 
         if (!team) team = plr->GetTeam();
 
 		if (team == teamId)
-			plr->GetReputationMgr().ModifyReputation(factionEntry, Reputation);
-    }
+		{
+			if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+			{
+				FactionEntry const* factionEntry2 = sFactionStore.LookupEntry(faction_id);
+				//plr->GetReputationMgr().ModifyReputation(factionEntry, Reputation);Õ½³¡»ìÅÅ×¢ÊÍ
+				if (plr->GetTeam() == plr->TeamForRace(plr->getRace())) // IF team not changed
+				{
+					plr->GetReputationMgr().ModifyReputation(factionEntry, Reputation);
+				}
+				else // IF team changed
+				{
+					plr->GetReputationMgr().ModifyReputation(factionEntry2, Reputation);
+				}
+				//==============end====================
+			}
+			else
+			{
+				plr->GetReputationMgr().ModifyReputation(factionEntry, Reputation);
+			}
+		}
+	}
 }
 
 void BattleGround::UpdateWorldState(uint32 Field, uint32 Value)
@@ -916,8 +967,8 @@ void BattleGround::EndBattleGround(Team winner)
 				}*/
 			}
 
-			if (sWorld.GetBattleGroundTime(2, 2) != 0/* && playercont < sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_IP_PLAYERCONT) && playerteama >= sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_PLAYERCONT_WINNER) && playerteamb >= sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_PLAYERCONT_LOSER) && GetStartTime() >= sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_TIME)*/)
-			{
+			//if (sWorld.GetBattleGroundTime(2, 2) != 0/* && playercont < sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_IP_PLAYERCONT) && playerteama >= sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_PLAYERCONT_WINNER) && playerteamb >= sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_PLAYERCONT_LOSER) && GetStartTime() >= sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_TIME)*/)
+			//{
 				BattleGroundScoreMap::const_iterator itraa = m_PlayerScores.find(plr->GetObjectGuid());
 				if (!itraa->second)
 					continue;
@@ -1069,12 +1120,12 @@ void BattleGround::EndBattleGround(Team winner)
 						}
 					}
 				}
-			}
+			//}
 		}
 		else
 		{
-			if (sWorld.GetBattleGroundTime(2, 2) != 0)
-			{
+			//if (sWorld.GetBattleGroundTime(2, 2) != 0)
+			//{
 				if (team == winner)
 				{
 					BattleGroundScoreMap::const_iterator itraa = m_PlayerScores.find(plr->GetObjectGuid());
@@ -1092,7 +1143,7 @@ void BattleGround::EndBattleGround(Team winner)
 
 					RewardMark(plr, ITEM_LOSER_COUNT);
 				}
-			}
+			//}
 		}
 
         plr->CombatStopWithPets(true);
@@ -1389,11 +1440,46 @@ void BattleGround::StartBattleGround()
 
 void BattleGround::AddPlayer(Player* plr)
 {
-    // remove afk from player
-    if (plr->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_AFK))
-        plr->ToggleAFK();
+	// remove afk from player
+	if (plr->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_AFK))
+		plr->ToggleAFK();
+	if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+	{
+		//==========================Õ½³¡»ìÅÅ
+		// enter battleground
+		// change team to stay balance
+		// team may be different with in battleground queue
+		uint32 hordePlayers = GetPlayersCountByTeam(HORDE);
+		uint32 alliancePlayers = GetPlayersCountByTeam(ALLIANCE);
 
-    // score struct must be created in inherited class
+		if (hordePlayers < alliancePlayers) // IF alliance more than horde
+		{
+			plr->SetDisplayId(14732);
+			plr->setFactionForRace(RACE_ORC);
+			plr->SetBGTeam(HORDE);
+		}
+		else if (hordePlayers > alliancePlayers) // IF horde more than alliance
+		{
+			plr->SetDisplayId(5446);
+			plr->setFactionForRace(RACE_HUMAN);
+			plr->SetBGTeam(ALLIANCE);
+		}
+		else // IF balance
+		{
+			if (plr->GetBGTeam() == HORDE) // IF player is a real horde, enter battleground as a horde
+			{
+				plr->setFactionForRace(RACE_ORC);
+				plr->SetDisplayId(14732);
+			}
+			else // IF player is a real alliance, enter battleground as an alliance
+			{
+				plr->setFactionForRace(RACE_HUMAN);
+				plr->SetDisplayId(5446);
+			}
+		}
+		//=====================end==============
+	}
+	// score struct must be created in inherited class
 
     ObjectGuid guid = plr->GetObjectGuid();
     Team team = plr->GetBGTeam();

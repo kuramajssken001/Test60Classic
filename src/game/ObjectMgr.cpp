@@ -2709,7 +2709,7 @@ void ObjectMgr::FlushRankPoints(uint32 dateTop)
     delete result;
 }
 
-void ObjectMgr::DistributeRankPoints(uint32 team, uint32 dateBegin, bool flush /*false*/)
+void ObjectMgr::DistributeRankPoints(uint32 team, uint32 dateBegin, bool flush)
 {
 	float RP;
 	float last_RP;
@@ -2748,7 +2748,7 @@ void ObjectMgr::DistributeRankPoints(uint32 team, uint32 dateBegin, bool flush /
 		last_RP = RP;
 
 		itr->rpEarning = MaNGOS::Honor::CalculateRpEarning(itr->GetInfo()->honorPoints, scores);
-		RP = MaNGOS::Honor::CalculateRpDecay(itr->rpEarning, RP, DK, MaNGOS::Honor::DishonorableKillPoints(level));
+		RP = MaNGOS::Honor::CalculateRpDecay(itr->rpEarning, RP);
 		RP = finiteAlways(RP) >= sWorld.getConfig(CONFIG_FLOAT_HONOR_PLAYER_MAX) ? sWorld.getConfig(CONFIG_FLOAT_HONOR_PLAYER_MAX) : finiteAlways(RP);
 		if (flush)
 		{
@@ -2762,6 +2762,113 @@ void ObjectMgr::DistributeRankPoints(uint32 team, uint32 dateBegin, bool flush /
 
 	delete result;
 }
+
+/*void ObjectMgr::FlushRankPoints(uint32 dateTop)
+{
+	// FLUSH CP
+	QueryResult* result = CharacterDatabase.PQuery("SELECT date FROM character_honor_cp WHERE TYPE = %u AND date <= %u GROUP BY date ORDER BY date DESC", HONORABLE, dateTop);
+	if (result)
+	{
+		uint32 date;
+		bool flush;
+		uint32 WeekBegin = dateTop - 7;
+		// search latest non-processed date if the server has been offline for different weeks
+		do
+		{
+			date = result->Fetch()->GetUInt32();
+			while (WeekBegin && date < WeekBegin)
+			{
+				WeekBegin -= 7;
+			}
+		} while (result->NextRow());
+
+		// start to flush from latest non-processed date to up
+		while (WeekBegin <= dateTop)
+		{
+			LoadStandingList(WeekBegin);
+
+			flush = WeekBegin < dateTop - 7; // flush only with date < lastweek
+
+			DistributeRankPoints(ALLIANCE, WeekBegin, flush);
+			DistributeRankPoints(HORDE, WeekBegin, flush);
+
+			WeekBegin += 7;
+		}
+	}
+
+	// FLUSH KILLS
+	CharacterDatabase.BeginTransaction();
+	// process only HK ( victim_type > 0 )
+	result = CharacterDatabase.PQuery("SELECT guid,TYPE,COUNT(*) AS kills FROM character_honor_cp WHERE date <= %u AND victim_type>0 GROUP BY guid,type", dateTop - 7);
+	if (result)
+	{
+		uint32 guid, kills;
+		uint8 type;
+		Field* fields = NULL;
+		do
+		{
+			fields = result->Fetch();
+			guid = fields[0].GetUInt32();
+			type = fields[1].GetUInt8();
+			kills = fields[2].GetUInt32();
+
+			if (type == HONORABLE)
+				CharacterDatabase.PExecute("UPDATE characters SET stored_honorable_kills = stored_honorable_kills + %u WHERE guid = %u", kills, guid);
+			else if (type == DISHONORABLE)
+				CharacterDatabase.PExecute("UPDATE characters SET stored_dishonorable_kills = stored_dishonorable_kills + %u WHERE guid = %u", kills, guid);
+		} while (result->NextRow());
+	}
+
+	// cleanin ALL cp before dateTop
+	CharacterDatabase.PExecute("DELETE FROM character_honor_cp WHERE date <= %u", dateTop - 7);
+	CharacterDatabase.CommitTransaction();
+
+	sLog.outString();
+	sLog.outString(">> Flushed all ranking points");
+
+	delete result;
+}
+
+void ObjectMgr::DistributeRankPoints(uint32 team, uint32 dateBegin, bool flush)
+{
+	float RP;
+	uint32 HK;
+
+	HonorStandingList list = GetStandingListBySide(team);
+
+	if (list.empty())
+		return;
+
+	HonorScores scores = MaNGOS::Honor::GenerateScores(list, team);
+
+	Field* fields = NULL;
+	QueryResult* result = NULL;
+	for (HonorStandingList::iterator itr = list.begin(); itr != list.end(); ++itr)
+	{
+		RP = 0;
+		result = CharacterDatabase.PQuery("SELECT stored_honor_rating,stored_honorable_kills FROM characters WHERE guid = %u ", itr->guid);
+		if (!result)
+			continue; // not cleaned table?
+
+		fields = result->Fetch();
+		RP = fields[0].GetFloat();
+		HK = fields[1].GetUInt32();
+
+		itr->rpEarning = MaNGOS::Honor::CalculateRpEarning(itr->GetInfo()->honorPoints, scores);
+		RP = MaNGOS::Honor::CalculateRpDecay(itr->rpEarning, RP);
+		RP = finiteAlways(RP) >= sWorld.getConfig(CONFIG_FLOAT_HONOR_PLAYER_MAX) ? sWorld.getConfig(CONFIG_FLOAT_HONOR_PLAYER_MAX) : finiteAlways(RP);
+
+		if (flush)
+		{
+			CharacterDatabase.BeginTransaction();
+			CharacterDatabase.PExecute("DELETE FROM character_honor_cp WHERE guid = %u AND TYPE = %u AND date BETWEEN %u AND %u", itr->guid, HONORABLE, dateBegin, dateBegin + 7);
+			CharacterDatabase.PExecute("UPDATE characters SET stored_honor_rating = %f , stored_honorable_kills = %u WHERE guid = %u", finiteAlways(RP + itr->rpEarning), HK + itr->honorKills, itr->guid);
+			CharacterDatabase.CommitTransaction();
+		}
+	}
+
+	delete result;
+}*/
 
 HonorStandingList ObjectMgr::GetStandingListBySide(uint32 side)
 {

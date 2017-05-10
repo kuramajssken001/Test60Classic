@@ -1059,6 +1059,7 @@ enum MangosStrings
 	LANG_WHISPER_REQ                    = 6605,
 	LANG_CHANNEL_REQ                    = 6606,
 
+	LANG_CHONGFUGOUMAI = 12001, //÷ÿ∏¥π∫¬ÚÃ· æ
 	LANG_CHANNEL_1                      = 6607,
 	LANG_CHANNEL_2                      = 6608,
 	LANG_CHANNEL_3                      = 6609,
@@ -1278,6 +1279,7 @@ enum MangosStrings
 	ZHANYOU_TIME_17                     = 6717,
 	ZHANYOU_TIME_18                     = 6718,
 	ZHANYOU_TIME_19                     = 6719,
+	ZHANYOU_TIME_20 = 6720,
 
 	ZHANYOU_HJRS_1                      = 6801,
 	ZHANYOU_HJRS_2                      = 6802,
@@ -1401,6 +1403,8 @@ enum MangosStrings
 	LANG_GONGGAO_34                     = 11033,
 	LANG_GONGGAO_35                     = 11034,
 	LANG_GONGGAO_36                     = 11035,
+	LANG_GONGGAO_37						= 11036,
+	LANG_GONGGAO_38						= 11037,
 
 	LANG_JIAOBEN_1                      = 20001,
 	LANG_JIAOBEN_2                      = 20002,

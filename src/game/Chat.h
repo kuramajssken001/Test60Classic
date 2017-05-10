@@ -332,6 +332,8 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleModifyRepCommand(char* args);
         bool HandleModifyGenderCommand(char* args);
 		bool HandleModifyJfCommand(char* args);
+		bool HandleDeleteMysqlCommand(char* args);
+		bool HandleUpMysqlCommand(char* args);
 
         //-----------------------Npc Commands-----------------------
         bool HandleNpcAddCommand(char* args);
@@ -426,6 +428,9 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleReloadLocalesPageTextCommand(char* args);
         bool HandleReloadLocalesPointsOfInterestCommand(char* args);
         bool HandleReloadLocalesQuestCommand(char* args);
+		bool HandleReloadGameobjectTemplateCommand(char* args);
+		bool HandleReloadItemTemplateCommand(char* args);
+		bool HandleReloadCreatureTemplateCommand(char* args);
         bool HandleReloadLootTemplatesCreatureCommand(char* args);
         bool HandleReloadLootTemplatesDisenchantCommand(char* args);
         bool HandleReloadLootTemplatesFishingCommand(char* args);
@@ -539,6 +544,7 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleRecallCommand(char* args);
         bool HandleAnnounceCommand(char* args);
 		bool HandleSjCommand(char* args);
+		bool HandleHonorTestCommand(char* args);
         bool HandleNotifyCommand(char* args);
         bool HandleGPSCommand(char* args);
         bool HandleTaxiCheatCommand(char* args);
@@ -583,6 +589,7 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleDelTicketCommand(char* args);
         bool HandleMaxSkillCommand(char* args);
         bool HandleSetSkillCommand(char* args);
+		bool HandleUpHonorCommand(char* args);
         bool HandleRespawnCommand(char* args);
         bool HandleComeToMeCommand(char* args);
         bool HandleCombatStopCommand(char* args);

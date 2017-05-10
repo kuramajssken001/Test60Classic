@@ -234,9 +234,13 @@ enum eConfigFloatValues
     CONFIG_FLOAT_RATE_DROP_ITEM_LEGENDARY,
     CONFIG_FLOAT_RATE_DROP_ITEM_ARTIFACT,
     CONFIG_FLOAT_RATE_DROP_ITEM_REFERENCED,
+	CONFIG_FLOAT_RATE_DROP_ITEM_QUEST,
     CONFIG_FLOAT_RATE_DROP_MONEY,
-    CONFIG_FLOAT_RATE_XP_KILL,
-    CONFIG_FLOAT_RATE_XP_QUEST,
+	CONFIG_FLOAT_RATE_PET_XP_KILL,
+    CONFIG_FLOAT_RATE_XP_KILL_LM,
+	CONFIG_FLOAT_RATE_XP_KILL_BL,
+    CONFIG_FLOAT_RATE_XP_QUEST_LM,
+	CONFIG_FLOAT_RATE_XP_QUEST_BL,
     CONFIG_FLOAT_RATE_XP_EXPLORE,
     CONFIG_FLOAT_RATE_REPUTATION_GAIN,
     CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_KILL,
@@ -466,6 +470,10 @@ enum eConfigBoolValues
     CONFIG_BOOL_VMAP_INDOOR_CHECK,
     CONFIG_BOOL_PET_UNSUMMON_AT_MOUNT,
     CONFIG_BOOL_MMAP_ENABLED,
+	CONFIG_BOOL_WORLD_LOGN_ON,
+	CONFIG_BOOL_WORLD_AH_ON,
+	CONFIG_BOOL_WORLD_PVP_ON,
+	CONFIG_BOOL_BATTLEGROUND_CFBG,
     CONFIG_BOOL_PLAYER_COMMANDS,
 	CONFIG_BOOL_SAFE_LOCK,
 	CONFIG_BOOL_OUTDOORPVP_TS_ENABLED,
@@ -572,6 +580,7 @@ class World
         void AddSession(WorldSession* s);
 		void SendBroadcast();
         bool RemoveSession(uint32 id);
+		void RewardItemid(Player* plr, uint32 item_id, uint32 count);
         /// Get the number of current active sessions
         void UpdateMaxSessionCounters();
         uint32 GetActiveAndQueuedSessionCount() const { return m_sessions.size(); }
@@ -657,7 +666,7 @@ class World
 
         void SetInitialWorldSettings();
         void LoadConfigSettings(bool reload = false);
-
+		void SendWorldTeam(int32 team, int32 string_id, ...);
         void SendWorldText(int32 string_id, ...);
 		void SendWorldTeamText(Player* pPlayer, int32 string_id, ...);
         void SendGlobalMessage(WorldPacket* packet);

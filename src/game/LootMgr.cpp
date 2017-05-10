@@ -250,6 +250,9 @@ bool LootStoreItem::Roll(bool rate) const
     if (mincountOrRef < 0)                                  // reference case
         return roll_chance_f(chance * (rate ? sWorld.getConfig(CONFIG_FLOAT_RATE_DROP_ITEM_REFERENCED) : 1.0f));
 
+	if (needs_quest)
+		return roll_chance_f(chance * (rate ? sWorld.getConfig(CONFIG_FLOAT_RATE_DROP_ITEM_QUEST) : 1.0f));
+
     ItemPrototype const* pProto = ObjectMgr::GetItemPrototype(itemid);
 
     float qualityModifier = pProto && rate ? sWorld.getConfig(qualityToRate[pProto->Quality]) : 1.0f;
@@ -395,7 +398,7 @@ LootSlotType LootItem::GetSlotTypeForSharedLoot(PermissionTypes permission, Play
         case OWNER_PERMISSION:
             return LOOT_SLOT_NORMAL;
         case GROUP_PERMISSION:
-            return LOOT_SLOT_VIEW;
+			return (is_blocked || is_underthreshold) ? LOOT_SLOT_NORMAL : LOOT_SLOT_VIEW;
         case MASTER_PERMISSION:
             return !is_underthreshold ? LOOT_SLOT_MASTER : LOOT_SLOT_NORMAL;
         default:
@@ -889,7 +892,7 @@ bool LootTemplate::LootGroup::HasQuestDropForPlayer(Player const* player) const
 // Rolls an item from the group (if any takes its chance) and adds the item to the loot
 void LootTemplate::LootGroup::Process(Loot& loot) const
 {
-    LootStoreItem const* item = Roll();
+	LootStoreItem const* item = Roll();
 	if (item != NULL)
 	{
 		loot.AddItem(*item);

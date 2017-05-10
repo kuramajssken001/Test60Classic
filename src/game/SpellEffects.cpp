@@ -4990,6 +4990,7 @@ void Spell::EffectReputation(SpellEffectIndex eff_idx)
 		switch (m_CastItem->GetEntry())
 		{
 		case 30047:
+		case 90002:
 			if (_player->GetPlayerMoneyLevel() >= 1)
 			{
 				_player->m_Player_GongNeng[PLAYED_MONEY_TIME] += 2592000;
@@ -5385,6 +5386,15 @@ void Spell::EffectSummonCritter(SpellEffectIndex eff_idx)
 					break;
 				case 30137:
 					pet_entry = 30134;
+					break;
+				case 30139:
+					pet_entry = 30146;
+					break;
+				case 30141:
+					pet_entry = 30147;
+					break;
+				case 30197:
+					pet_entry = 61010;
 					break;
 				default:
 					pet_entry = m_spellInfo->EffectMiscValue[eff_idx];

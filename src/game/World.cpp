@@ -115,6 +115,29 @@ World::World()
     m_configForceLoadMapIds = NULL;
 }
 
+void World::RewardItemid(Player* plr, uint32 item_id, uint32 count)
+{
+	ItemPosCountVec dest;
+	uint32 no_space_count = 0;
+	uint8 msg = plr->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, item_id, count, &no_space_count);
+
+	if (msg == EQUIP_ERR_ITEM_NOT_FOUND)
+	{
+		sLog.outErrorDb("Reward item (Entry %u) not exist in `item_template`.", item_id);
+		return;
+	}
+
+	if (msg != EQUIP_ERR_OK)                                // convert to possible store amount
+		count -= no_space_count;
+
+	if (count != 0 && !dest.empty())                        // can add some
+	if (Item* item = plr->StoreNewItem(dest, item_id, true, 0))
+		plr->SendNewItem(item, count, true, false);
+
+	//if (no_space_count > 0)
+	//SendRewardMarkByMail(plr, item_id, no_space_count);
+}
+
 /// World destructor
 World::~World()
 {
@@ -401,9 +424,13 @@ void World::LoadConfigSettings(bool reload)
     setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_LEGENDARY,  "Rate.Drop.Item.Legendary",  1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_ARTIFACT,   "Rate.Drop.Item.Artifact",   1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_REFERENCED, "Rate.Drop.Item.Referenced", 1.0f);
+	setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_QUEST, "Rate.Drop.Item.Quest", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_DROP_MONEY,           "Rate.Drop.Money", 1.0f);
-    setConfig(CONFIG_FLOAT_RATE_XP_KILL,    "Rate.XP.Kill",    1.0f);
-    setConfig(CONFIG_FLOAT_RATE_XP_QUEST,   "Rate.XP.Quest",   1.0f);
+	setConfig(CONFIG_FLOAT_RATE_PET_XP_KILL, "Rate.Pet.XP.Kill", 1.0f);
+    setConfig(CONFIG_FLOAT_RATE_XP_KILL_LM,    "Rate.XP.Kill_Lm",    1.0f);
+	setConfig(CONFIG_FLOAT_RATE_XP_KILL_BL, "Rate.XP.Kill_Bl", 1.0f);
+    setConfig(CONFIG_FLOAT_RATE_XP_QUEST_LM,   "Rate.XP.Quest_Lm",   1.0f);
+	setConfig(CONFIG_FLOAT_RATE_XP_QUEST_BL, "Rate.XP.Quest_Bl", 1.0f);
     setConfig(CONFIG_FLOAT_RATE_XP_EXPLORE, "Rate.XP.Explore", 1.0f);
     setConfig(CONFIG_FLOAT_RATE_REPUTATION_GAIN,           "Rate.Reputation.Gain", 1.0f);
     setConfig(CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_KILL,  "Rate.Reputation.LowLevel.Kill", 1.0f);
@@ -879,6 +906,10 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_UINT32_TIMERBAR_BREATH_MAX,      "TimerBar.Breath.Max", 180);
     setConfig(CONFIG_UINT32_TIMERBAR_FIRE_GMLEVEL,    "TimerBar.Fire.GMLevel", SEC_CONSOLE);
     setConfig(CONFIG_UINT32_TIMERBAR_FIRE_MAX,        "TimerBar.Fire.Max", 1);
+	setConfig(CONFIG_BOOL_WORLD_LOGN_ON, "World.Logn.On", false);
+	setConfig(CONFIG_BOOL_WORLD_AH_ON, "World.AH.On", false);
+	setConfig(CONFIG_BOOL_WORLD_PVP_ON, "World.PVP.On", false);
+	setConfig(CONFIG_BOOL_BATTLEGROUND_CFBG, "Battleground.CFBG", false);
 
     setConfig(CONFIG_BOOL_PET_UNSUMMON_AT_MOUNT,      "PetUnsummonAtMount", false);
 
@@ -1652,58 +1683,9 @@ void World::Update(uint32 diff)
 
     // update the instance reset times
     sMapPersistentStateMgr.Update();
-
-    /*if (GetDateToday() >= m_NextMaintenanceDate)//注释服务器重启事件Start
-	{
-		if (m_MaintenanceTimeChecker < diff)
-		{
-			sWorld.ShutdownServ(1, SHUTDOWN_MASK_RESTART, 2);
-			//ServerMaintenanceStart();
-			//sObjectMgr.LoadStandingList();
-			m_MaintenanceTimeChecker = 600000;
-		}
-		else
-			m_MaintenanceTimeChecker -= diff;
-	}
- 
-	if (battleground_time_Start1 != 0 && battleground_kaiguan == 0)
-	{
-		if (battleground_time_Start1 <= GetGameTime())
-		{
-			LoginDatabase.PExecute("UPDATE characters_battleground SET battleground= '%u' WHERE id = '%u'", 1, 1);
-			battleground_kaiguan = 1;
-		}
-	}
-	if (battleground_time_End1 != 0 && battleground_kaiguan == 1)
-	{
-		if (battleground_time_End1 <= GetGameTime())
-		{
-				LoginDatabase.PExecute("UPDATE characters_battleground SET battleground= '%u' WHERE id = '%u'", 0, 1);
-				battleground_kaiguan = 2;
-		}
-	}
-	if (battleground_time_Start2 != 0 && battleground_kaiguan == 2)
-	{
-		if (battleground_time_Start2 <= GetGameTime())
-		{
-			LoginDatabase.PExecute("UPDATE characters_battleground SET battleground= '%u' WHERE id = '%u'", 1, 3);
-			battleground_kaiguan = 3;
-		}
-	}
-	if (battleground_time_End2 != 0 && battleground_kaiguan == 3)
-	{
-		if (battleground_time_End2 <= GetGameTime())
-		{
-			LoginDatabase.PExecute("UPDATE characters_battleground SET battleground= '%u', battlegroundtime_start = '%u', battlegroundtime_end = '%u' WHERE id = '%u'", 0, 0, 0, 1);
-			LoginDatabase.PExecute("UPDATE characters_battleground SET battleground= '%u', battlegroundtime_start = '%u', battlegroundtime_end = '%u' WHERE id = '%u'", 0, 0, 0, 3);
-			battleground_time_Start1 = 0;
-			battleground_time_End1 = 0;
-			battleground_time_Start2 = 0;
-			battleground_time_End2 = 0;
-			battleground_kaiguan = 0;
-		}
-	}*///注释服务器重启事件End-----------------------------------------------
-	if (m_MaintenanceTimeChecker < diff)
+	//---------------------------------计算荣誉---------------------
+	// update the instance reset times
+	/*if (m_MaintenanceTimeChecker < diff)
 	{
 		if (GetDateToday() >= m_NextMaintenanceDate)
 		{
@@ -1713,9 +1695,24 @@ void World::Update(uint32 diff)
 		m_MaintenanceTimeChecker = 600000; // check 10 minutes
 	}
 	else
-		m_MaintenanceTimeChecker -= diff;
-	//-------------------------------------------------自行添加--------------
+		m_MaintenanceTimeChecker -= diff;*/
 
+	//----------------------------注释服务器重启事件Start--------------------
+    if (GetDateToday() >= m_NextMaintenanceDate)
+	{
+		if (m_MaintenanceTimeChecker < diff)
+		{
+			KickAll();
+			sWorld.ShutdownServ(1, SHUTDOWN_MASK_RESTART, 2);
+			//ServerMaintenanceStart();
+			//sObjectMgr.LoadStandingList();
+			m_MaintenanceTimeChecker = 600000;
+		}
+		else
+			m_MaintenanceTimeChecker -= diff;
+	}
+ 
+	//----------------------注释服务器重启事件End-------------------------
 
     // And last, but not least handle the issued cli commands
     ProcessCliCommands();

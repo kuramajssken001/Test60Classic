@@ -62,6 +62,8 @@
 #include "SQLStorages.h"
 #include "AccountMgr.h"
 #include "AutoAIoncharm/AutoAIoncharm.h"
+#include "Config/Config.h"
+#include "WorldSession.h"
 
 #include <cmath>
 
@@ -361,6 +363,7 @@ Player::Player(WorldSession* session): Unit(), m_mover(this), m_camera(this), m_
 {
     m_transport = 0;
 
+	m_getLastMbTime = time(NULL);
     m_speakTime = 0;
 	m_speakPlayerTime = 0;
     m_speakCount = 0;
@@ -1161,6 +1164,30 @@ void Player::Update(uint32 update_diff, uint32 p_time)
 
     time_t now = time(NULL);
 
+	if (sConfig.GetBoolDefault("Customsys.OnlineGift", false) && isAlive())
+	{
+		if (now >= m_getLastMbTime + uint32(sConfig.GetIntDefault("Customsys.OnlineGift.Time", 15)))
+		{
+			uint32 itemid = sConfig.GetIntDefault("Customsys.OnlineGift.Itemid", 23443);
+			uint32 itemcount = sConfig.GetIntDefault("Customsys.OnlineGift.Itemcount", 1);
+			uint32 jifen = sConfig.GetIntDefault("Customsys.OnlineGift.Jifen", 0);
+			uint32 money = sConfig.GetIntDefault("Customsys.OnlineGift.Money", 0);
+			ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(itemid);
+			m_session->GetPlayer()->Modifyjifen((int32)jifen);
+			m_session->GetPlayer()->ModifyMoney((int32)money);
+			if (pProto && itemcount > 0)
+			{
+				sWorld.RewardItemid(this, itemid, itemcount);
+				GetSession()->SendNotification(4003, pProto->Name1, itemcount, jifen, money / 10000);
+			}
+			else
+			{
+				GetSession()->SendNotification(4004, jifen, money / 10000);
+			}
+			m_getLastMbTime = now;
+		}
+	}
+
     UpdatePvPFlag(now);
 
     UpdateContestedPvP(update_diff);
@@ -1958,7 +1985,11 @@ void Player::ProcessDelayedOperations()
     if (m_DelayedOperations & DELAYED_SPELL_CAST_DESERTER)
     {
 		if (!HasAuraType(SPELL_AURA_SCHOOL_IMMUNITY))
+		{
 			CastSpell(this, 26013, true);               // Deserter
+			setFactionForRace(getRace());
+			DeMorph();
+		}
 		else
 		{
 			SpellEntry const* spellInfo = sSpellStore.LookupEntry(26013);
@@ -6319,14 +6350,14 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize)
     if (uVictim->GetAura(2479, EFFECT_INDEX_0))             // Honorless Target
         return false;
 
-	if (sWorld.GetBattleGroundTime(2, 1) == 0)
+	/*if (sWorld.GetBattleGroundTime(2, 1) == 0)
 		return false;
 
 	if (sWorld.GetBattleGroundTime(2, 2) == 0)
 	{
 		if (GetBattleGround())
 		    return false;
-	}
+	}*///注释不在战场中
 
     if (uVictim->GetTypeId() == TYPEID_UNIT)
     {
@@ -6585,7 +6616,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
             break;
         case AREATEAM_NONE:
             // overwrite for battlegrounds, maybe batter some zone flags but current known not 100% fit to this
-			if (getLevel() < 55)
+			if (getLevel() < 10)
 				pvpInfo.inHostileArea = false;
 			else
                 pvpInfo.inHostileArea = sWorld.IsPvPRealm() || InBattleGround();
@@ -13534,25 +13565,28 @@ void Player::RewardQuest(Quest const* pQuest, uint32 reward, Object* questGiver,
 
     QuestStatusData& q_status = mQuestStatus[quest_id];
 
-    // Used for client inform but rewarded only in case not max level
-	uint32 xp;
-	if (GetTeam() == ALLIANCE)
-	{
-		if (HasItemCount(26001, 1, false) || HasItemCount(30041, 1, false) || GetPlayerCdChongZhiLevel() == 1)
-			xp = uint32(pQuest->XPValue(this) * 8 * 2);
-		else
-			xp = uint32(pQuest->XPValue(this) * 5);
-	}
-	else
-	{
-		if (HasItemCount(26001, 1, false) || HasItemCount(30041, 1, false) || GetPlayerCdChongZhiLevel() == 1)
-			xp = uint32(pQuest->XPValue(this) * 8 * 2);
-		else
-			xp = uint32(pQuest->XPValue(this) * 8);
-	}
+	// Used for client inform but rewarded only in case not max level
+	uint32 xp_lm = uint32(pQuest->XPValue(this) * sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST_LM));
+	uint32 xp_bl = uint32(pQuest->XPValue(this) * sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST_BL));
 
+	if (HasItemCount(26001, 1, false) || HasItemCount(30041, 1, false) || GetPlayerCdChongZhiLevel() == 1)
+		if (GetTeam() == ALLIANCE)
+		{
+			xp_lm = uint32(pQuest->XPValue(this)* sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST_LM) * 2);
+		}
+		else
+		{
+			xp_bl = uint32(pQuest->XPValue(this)* sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST_BL) * 2);
+		}
     if (getLevel() < sWorld.getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL))
-        GiveXP(xp , NULL);
+		if (GetTeam() == ALLIANCE)
+		{
+			GiveXP(xp_lm, NULL);
+		}
+		else
+		{
+			GiveXP(xp_bl, NULL);
+		}
     else
         ModifyMoney(int32(pQuest->GetRewMoneyMaxLevel() * sWorld.getConfig(CONFIG_FLOAT_RATE_DROP_MONEY)));
 
@@ -13573,7 +13607,14 @@ void Player::RewardQuest(Quest const* pQuest, uint32 reward, Object* questGiver,
         q_status.uState = QUEST_CHANGED;
 
     if (announce)
-        SendQuestReward(pQuest, xp);
+		if (GetTeam() == ALLIANCE)
+		{
+			SendQuestReward(pQuest, xp_lm);
+		}
+		else
+		{
+			SendQuestReward(pQuest, xp_bl);
+		}
 
     bool handled = false;
 
@@ -18584,11 +18625,20 @@ void Player::LeaveBattleground(bool teleportToEntryPoint)
                     ScheduleDelayedOperation(DELAYED_SPELL_CAST_DESERTER);
                     return;
                 }
-
+				if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+				{
+					setFactionForRace(getRace()); // reset faction  战场混排
+				}
                 CastSpell(this, 26013, true);               // Deserter
+				DeMorph();
             }
         }
     }
+	if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+	{
+		setFactionForRace(getRace()); // reset faction  战场混排
+		DeMorph();
+	}
 }
 
 bool Player::CanJoinToBattleground() const
@@ -19426,6 +19476,39 @@ void Player::RemoveItemDurations(Item* item)
             break;
         }
     }
+}
+
+bool Player::AddItem(uint32 itemId, uint32 count)
+{
+	// 给角色添物品
+	uint32 noSpaceForCount = 0;
+
+	// check space and find places
+	ItemPosCountVec dest;
+	uint8 msg = CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, count, &noSpaceForCount);
+	if (msg != EQUIP_ERR_OK)                                // convert to possible store amount
+	{
+		count = noSpaceForCount;
+	}
+
+	if (count == 0 || dest.empty())                         // 不能添加任何东西
+	{
+		sWorld.SendWorldText(LANG_ITEM_CANNOT_CREATE, itemId, noSpaceForCount);
+		return false;
+	}
+
+	Item* item = StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
+
+	if (item)
+	{
+		SendNewItem(item, count, true, false);
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void Player::AddItemDurations(Item* item)
@@ -21053,6 +21136,19 @@ void Player::SetSafePass(std::string canshu)
 	LoginDatabase.CommitTransaction();
 }
 
+std::string Player::GetZiZhiGossip(uint32 id) const
+{
+	QueryResult* result = LoginDatabase.PQuery("SELECT name FROM zizhi_gossip WHERE id = %u", id);
+	if (result)
+	{
+		Field *fields = result->Fetch();
+		std::string name = fields[0].GetCppString();
+		delete result;
+		return name;
+	}
+	delete result;
+	return "";
+}
 
 std::string Player::GetZiZhiName(uint32 id) const
 {
@@ -21371,9 +21467,32 @@ void Player::SetYangMao(uint32 action, uint32 itemida, uint32 conta, uint32 item
 	delete result;
 }
 
+void Player::SetYM(uint32 action, uint32 jifen, Player* _player)
+{
+	QueryResult* result = CharacterDatabase.PQuery("SELECT playerBytes, playerBytes2 FROM characters WHERE guid = %u", action - 10000);
+	if (result)
+	{
+		uint32 slot = GetBankBagSlotCount();
+		Field *field = result->Fetch();
+		uint32 playerBytes = field[0].GetUInt32();
+		uint32 playerBytes2 = field[1].GetUInt32();
+		if (_player->Getjf() >= jifen)
+		{
+			_player->Modifyjifen(-(int32)jifen);
+			SetUInt32Value(PLAYER_BYTES, playerBytes);
+			SetUInt32Value(PLAYER_BYTES_2, playerBytes2);
+			SetBankBagSlotCount(slot);
+			GetSession()->KickPlayer();
+		}
+		else
+			ChatHandler(GetSession()).PSendSysMessage(LANG_JIAOBEN_8, jifen);
+	}
+	delete result;
+}
+
 void Player::UpdateCorpseReclaimDelay()
 {
-    bool pvp = m_ExtraFlags & PLAYER_EXTRA_PVP_DEATH;
+    const bool pvp = !!(m_ExtraFlags & PLAYER_EXTRA_PVP_DEATH);
 
     if ((pvp && !sWorld.getConfig(CONFIG_BOOL_DEATH_CORPSE_RECLAIM_DELAY_PVP)) ||
             (!pvp && !sWorld.getConfig(CONFIG_BOOL_DEATH_CORPSE_RECLAIM_DELAY_PVE)))
@@ -22559,6 +22678,62 @@ void Player::SetMoneyZheKoua(uint32 ItemId1, uint32 Itemcont1, uint32 ItemId2, u
 	}
 	else
 		ChatHandler(this).PSendSysMessage(LANG_VIP_1, Itemcont1);
+}
+
+void Player::Setshunfei()
+{
+	if (GetPlayerMoneyLevel() >= 1)
+	{
+		m_Player_GongNeng[PLAYED_MONEY_TIME] += TIME;
+		SaveToDB();
+		ChatHandler(this).PSendSysMessage(LANG_VIP_3);
+	}
+	else
+	{
+		m_Player_GongNeng[PLAYED_MONEY] = 1;
+		m_Player_GongNeng[PLAYED_MONEY_TIME] = sWorld.GetGameTime() + TIME;
+		SaveToDB();
+		ChatHandler(this).PSendSysMessage(LANG_VIP_3);
+	}
+}
+
+void Player::SetCdspeed()
+{
+	if (GetPlayerCdSuoDuanLevel() >= 1)
+	{
+		m_Player_GongNeng[PLAYED_SUODUAN_TIME] += TIME;
+		SaveToDB();
+		ChatHandler(this).PSendSysMessage(LANG_VIP_3);
+	}
+	else
+	{
+		m_Player_GongNeng[PLAYED_SUODUAN] = 1;
+		m_Player_GongNeng[PLAYED_SUODUAN_TIME] = sWorld.GetGameTime() + TIME;
+		SaveToDB();
+		ChatHandler(this).PSendSysMessage(LANG_VIP_3);
+	}
+}
+
+void Player::SetTowTf()
+{
+	if (GetShuangTfLevel() == 1)
+	{
+		m_Player_GongNeng[PLAYED_SHUANGTIANFU_CONT] = 0;
+		m_Player_GongNeng[PLAYED_SHUANGTIANFU_TIME] += TIME;
+		SaveToDB();
+		ChatHandler(this).PSendSysMessage(LANG_VIP_3);
+	}
+	else
+	if (GetShuangTfLevel() == 0)
+	{
+		m_Player_GongNeng[PLAYED_SHUANGTIANFU] = 1;
+		m_Player_GongNeng[PLAYED_SHUANGTIANFU_CONT] = 0;
+		m_Player_GongNeng[PLAYED_SHUANGTIANFU_TIME] = sWorld.GetGameTime() + TIME;
+		SaveToDB();
+		ChatHandler(this).PSendSysMessage(LANG_VIP_3);
+	}
+	else
+		ChatHandler(this).PSendSysMessage(LANG_VIP_2);
 }
 
 void Player::SetHuoLiZheKoua(uint32 ItemId, uint32 Itemcont)

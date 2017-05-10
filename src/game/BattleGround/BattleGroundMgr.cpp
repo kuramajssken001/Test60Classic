@@ -146,7 +146,25 @@ GroupQueueInfo* BattleGroundQueue::AddGroup(Player* leader, Group* grp, BattleGr
     ginfo->JoinTime                  = WorldTimer::getMSTime();
     ginfo->RemoveInviteTime          = 0;
     ginfo->GroupTeam                 = leader->GetTeam();
+	if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+	{
+		//==========================Õ½³¡»ìÅÅ============
+		// queue battleground
+		// change team to stay balance
+		uint32 uHorde = 0;
+		uint32 uAlliance = 0;
+		GroupsQueueType::const_iterator itr;
+		for (itr = m_QueuedGroups[bracketId][BG_QUEUE_NORMAL_ALLIANCE].begin(); itr != m_QueuedGroups[bracketId][BG_QUEUE_NORMAL_ALLIANCE].end(); ++itr)
+		if (!(*itr)->IsInvitedToBGInstanceGUID)
+			uAlliance += (*itr)->Players.size();
+		for (itr = m_QueuedGroups[bracketId][BG_QUEUE_NORMAL_HORDE].begin(); itr != m_QueuedGroups[bracketId][BG_QUEUE_NORMAL_HORDE].end(); ++itr)
+		if (!(*itr)->IsInvitedToBGInstanceGUID)
+			uHorde += (*itr)->Players.size();
+		if (uHorde != uAlliance) // IF not balance, change the team
+			ginfo->GroupTeam = (uAlliance > uHorde) ? HORDE : ALLIANCE;
 
+		//===================end=======================
+	}
     ginfo->Players.clear();
 
     // compute index (if group is premade or joined a rated match) to queues
@@ -210,13 +228,13 @@ GroupQueueInfo* BattleGroundQueue::AddGroup(Player* leader, Group* grp, BattleGr
                 // Show queue status to player only (when joining queue)
                 if (sWorld.getConfig(CONFIG_UINT32_BATTLEGROUND_QUEUE_ANNOUNCER_JOIN) == 1)
                 {
-                    ChatHandler(leader).PSendSysMessage(LANG_BG_QUEUE_ANNOUNCE_SELF, bgName, q_min_level, q_min_level + 10,
+                    ChatHandler(leader).PSendSysMessage(LANG_BG_QUEUE_ANNOUNCE_SELF, bgName,
                                                         qAlliance, (MinPlayers > qAlliance) ? MinPlayers - qAlliance : (uint32)0, qHorde, (MinPlayers > qHorde) ? MinPlayers - qHorde : (uint32)0);
                 }
                 // System message
                 else
                 {
-                    sWorld.SendWorldText(LANG_BG_QUEUE_ANNOUNCE_WORLD, bgName, qAlliance, (MinPlayers > qAlliance) ? MinPlayers - qAlliance : (uint32)0, qHorde, (MinPlayers > qHorde) ? MinPlayers - qHorde : (uint32)0);
+					sWorld.SendWorldText(LANG_BG_QUEUE_ANNOUNCE_WORLD, bgName, leader->GetName(), leader->getLevel(), qAlliance, (MinPlayers > qAlliance) ? MinPlayers - qAlliance : (uint32)0, qHorde, (MinPlayers > qHorde) ? MinPlayers - qHorde : (uint32)0);
                 }
             }
         }

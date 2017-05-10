@@ -795,7 +795,24 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 		pCurrChar->NearTeleportTo(-8570.2998f, 1991.2600f, 100.4000f, 3.44000f);
 	}
 
+	
+	if (pCurrChar->InBattleGround())
+	{
+		if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+		{
+			pCurrChar->TeleportToHomebind();
+			if (pCurrChar->HasAura(26013))
+			{
+				pCurrChar->RemoveAurasDueToSpell(26013);
+			}
+		}
+	}
+	
     m_playerLoading = false;
+	if (sWorld.getConfig(CONFIG_BOOL_WORLD_LOGN_ON))
+	{
+		sWorld.SendWorldText(4000, pCurrChar->GetName(), pCurrChar->getLevel());
+	}
     delete holder;
 }
 

@@ -2610,6 +2610,29 @@ void Spell::prepare(SpellCastTargets const* targets, Aura* triggeredByAura)
         return;
     }
 
+	if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_CFBG))
+	{
+		if (m_caster->GetTypeId() == TYPEID_PLAYER)
+		{
+			Player* me = (Player*)m_caster;
+			if (me->InBattleGround())
+			{
+				switch (m_spellInfo->Id)
+				{
+					case 605:// 精神控制, rank 1
+					case 10911:// 精神控制, rank 2
+					case 10912:// 精神控制, rank 3
+						SendCastResult(SPELL_FAILED_SPELL_UNAVAILABLE);
+						finish(false);
+						return;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	}
+
     // Fill cost data
     m_powerCost = CalculatePowerCost(m_spellInfo, m_caster, this, m_CastItem);
 
@@ -2725,7 +2748,6 @@ void Spell::cancel()
 void Spell::cast(bool skipCheck)
 {
     SetExecutedCurrently(true);
-
     if (!m_caster->CheckAndIncreaseCastCounter())
     {
         if (m_triggeredByAuraSpell)

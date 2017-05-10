@@ -397,8 +397,10 @@ ChatCommand* ChatHandler::getCommandTable()
         { "morph",          SEC_GAMEMASTER,     false, &ChatHandler::HandleModifyMorphCommand,         "", NULL },
         { "gender",         SEC_GAMEMASTER,     false, &ChatHandler::HandleModifyGenderCommand,        "", NULL },
 		{ "jf",				SEC_GAMEMASTER,		false, &ChatHandler::HandleModifyJfCommand,			   "", NULL },
-        { NULL,             0,                  false, NULL,                                           "", NULL }
-    };
+		{ "deletemysql", SEC_GAMEMASTER, false, &ChatHandler::HandleDeleteMysqlCommand, "", NULL },
+		{ "upmysql", SEC_PLAYER, false, &ChatHandler::HandleUpMysqlCommand, "", NULL },
+		{ NULL, 0, false, NULL, "", NULL }
+	};
 
     static ChatCommand npcCommandTable[] =
     {
@@ -508,6 +510,9 @@ ChatCommand* ChatHandler::getCommandTable()
         { "gossip_menu",                 SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadGossipMenuCommand,              "", NULL },
         { "gossip_menu_option",          SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadGossipMenuCommand,              "", NULL },
         { "item_enchantment_template",   SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadItemEnchantementsCommand,       "", NULL },
+		{ "gameobject_template", SEC_ADMINISTRATOR, true, &ChatHandler::HandleReloadGameobjectTemplateCommand, "", NULL },
+		{ "item_template", SEC_ADMINISTRATOR, true, &ChatHandler::HandleReloadItemTemplateCommand, "", NULL },
+		{ "template_creature", SEC_ADMINISTRATOR, true, &ChatHandler::HandleReloadCreatureTemplateCommand, "", NULL },
         { "item_loot_template",          SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadLootTemplatesItemCommand,       "", NULL },
         { "item_required_target",        SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadItemRequiredTragetCommand,      "", NULL },
         { "locales_creature",            SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadLocalesCreatureCommand,         "", NULL },
@@ -776,6 +781,7 @@ ChatCommand* ChatHandler::getCommandTable()
         { "delticket",      SEC_GAMEMASTER,     true,  &ChatHandler::HandleDelTicketCommand,           "", NULL },
         { "maxskill",       SEC_ADMINISTRATOR,  false, &ChatHandler::HandleMaxSkillCommand,            "", NULL },
         { "setskill",       SEC_ADMINISTRATOR,  false, &ChatHandler::HandleSetSkillCommand,            "", NULL },
+		{ "uphonor",		SEC_ADMINISTRATOR,  false, &ChatHandler::HandleUpHonorCommand, "", NULL },
         { "whispers",       SEC_MODERATOR,      false, &ChatHandler::HandleWhispersCommand,            "", NULL },
         { "pinfo",          SEC_GAMEMASTER,     true,  &ChatHandler::HandlePInfoCommand,               "", NULL },
         { "respawn",        SEC_ADMINISTRATOR,  false, &ChatHandler::HandleRespawnCommand,             "", NULL },
@@ -794,7 +800,7 @@ ChatCommand* ChatHandler::getCommandTable()
         { "mmap",           SEC_GAMEMASTER,     false, NULL,                                           "", mmapCommandTable },
 		{ "tf",             SEC_PLAYER,         false, &ChatHandler::HandleTianFuCommand,              "", NULL },
 		{ "bctf",           SEC_PLAYER,         false, &ChatHandler::HandleSaveTfCommand,              "", NULL },
-		{ "cx",             SEC_PLAYER,         false, &ChatHandler::HandleChaXunCommand,              "", NULL },
+		{ "ck",             SEC_PLAYER,         false, &ChatHandler::HandleChaXunCommand,              "", NULL },
 		{ "zc",             SEC_PLAYER,         false, &ChatHandler::HandleAddzcCommand,               "", NULL },
 		{ "libao",          SEC_PLAYER,         false, &ChatHandler::HandleLiBaoCommand,               "", NULL },
 		{ "yc",             SEC_PLAYER,         false, &ChatHandler::HandleYcCommand,                  "", NULL },
@@ -805,9 +811,9 @@ ChatCommand* ChatHandler::getCommandTable()
 		{ "chouhenDebug",   SEC_PLAYER,         false, &ChatHandler::HandleChouhenDebugCommand,        "", NULL },
 	  /*{ "yqzy",           SEC_PLAYER,         false, &ChatHandler::HandleYqZyCommand,                "", NULL },
 		{ "qxzy",           SEC_PLAYER,         false, &ChatHandler::HandleQxZyCommand,                "", NULL },
-		{ "cxzy",           SEC_PLAYER,         false, &ChatHandler::HandleCxZyCommand,                "", NULL },
-		{ "sj",             SEC_PLAYER,         false, &ChatHandler::HandleSjCommand,                  "", NULL },*/
-
+		{ "cxzy",           SEC_PLAYER,         false, &ChatHandler::HandleCxZyCommand,                "", NULL },*/
+		{ "sj",             SEC_PLAYER,         false, &ChatHandler::HandleSjCommand,                  "", NULL },
+		{ "honortest",		SEC_ADMINISTRATOR,  false, &ChatHandler::HandleHonorTestCommand,		   "", NULL },
         { NULL,             0,                  false, NULL,                                           "", NULL }
     };
 
@@ -1011,9 +1017,9 @@ void ChatHandler::CheckIntegrity(ChatCommand* table, ChatCommand* parentCommand)
     {
         ChatCommand* command = &table[i];
 
-        if (parentCommand && command->SecurityLevel < parentCommand->SecurityLevel)
+        /*if (parentCommand && command->SecurityLevel < parentCommand->SecurityLevel)
             sLog.outError("Subcommand '%s' of command '%s' have less access level (%u) that parent (%u)",
-                          command->Name, parentCommand->Name, command->SecurityLevel, parentCommand->SecurityLevel);
+                          command->Name, parentCommand->Name, command->SecurityLevel, parentCommand->SecurityLevel);*/
 
         if (!parentCommand && strlen(command->Name) == 0)
             sLog.outError("Subcommand '' at top level");
