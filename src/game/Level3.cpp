@@ -7849,41 +7849,56 @@ bool ChatHandler::HandleAddzcCommand(char* args)
 
 		if (cout == 1)
 		{
-			if (player->getLevel() != 60)
+			if (sConfig.GetBoolDefault("command.ZhanGe", false))
 			{
-				SendSysMessage(LANG_BG_WS_5);
-				SetSentErrorMessage(true);
-				return false;
+				if (player->getLevel() != 60)
+				{
+					SendSysMessage(LANG_BG_WS_5);
+					SetSentErrorMessage(true);
+					return false;
+				}
+
+				BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(3890);
+
+				if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				{
+					sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
+					return false;
+				}
+
+				player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
 			}
-
-			BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(3890);
-
-			if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+			else
 			{
-				sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
-				return false;
+				SendSysMessage(LANG_JIAOBEN_21);
 			}
-
-			player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
 		}
 		else
 		if (cout == 2)
 		{
-			if (player->getLevel() != 60)
+			if (sConfig.GetBoolDefault("Command.ALX", false))
 			{
-				SendSysMessage(LANG_BG_WS_5);
-				SetSentErrorMessage(true);
-				return false;
-			}
-			BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(15006);
+				if (player->getLevel() != 60)
+				{
+					SendSysMessage(LANG_BG_WS_5);
+					SetSentErrorMessage(true);
+					return false;
+				}
+				BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(15006);
 
-			if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				{
+					sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
+					return false;
+				}
+
+
+				player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
+			}
+			else
 			{
-				sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
-				return false;
+				SendSysMessage(LANG_JIAOBEN_21);
 			}
-
-			player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
 		}
 		else
 		if (cout == 3)
@@ -7926,40 +7941,54 @@ bool ChatHandler::HandleAddzcCommand(char* args)
 
 		if (filter == "zg")
 		{
-			if (player->getLevel() != 60)
+			if (sConfig.GetBoolDefault("Command.ZhanGe", false))
 			{
-				SendSysMessage(LANG_BG_WS_5);
-				SetSentErrorMessage(true);
-				return false;
-			}
-			BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(3890);
+				if (player->getLevel() != 60)
+				{
+					SendSysMessage(LANG_BG_WS_5);
+					SetSentErrorMessage(true);
+					return false;
+				}
+				BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(3890);
 
-			if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				{
+					sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
+					return false;
+				}
+
+				player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
+			}
+			else
 			{
-				sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
-				return false;
+				SendSysMessage(LANG_JIAOBEN_21);
 			}
-
-			player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
 		}
 		else
 		if (filter == "alx")
 		{
-			if (player->getLevel() != 60)
+			if (sConfig.GetBoolDefault("Command.ALX", false))
 			{
-				SendSysMessage(LANG_BG_WS_5);
-				SetSentErrorMessage(true);
-				return false;
-			}
-			BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(15006);
+				if (player->getLevel() != 60)
+				{
+					SendSysMessage(LANG_BG_WS_5);
+					SetSentErrorMessage(true);
+					return false;
+				}
+				BattleGroundTypeId bgTypeId = sBattleGroundMgr.GetBattleMasterBG(15006);
 
-			if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				if (bgTypeId == BATTLEGROUND_TYPE_NONE)
+				{
+					sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
+					return false;
+				}
+
+				player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
+			}
+			else
 			{
-				sLog.outError("a user (guid %u) requested battlegroundlist from a npc who is no battlemaster", player->GetGUIDLow());
-				return false;
+				SendSysMessage(LANG_JIAOBEN_21);
 			}
-
-			player->GetSession()->SendBattlegGroundList(player->GetObjectGuid(), bgTypeId);
 		}
 		else
 		if (filter == "as")
