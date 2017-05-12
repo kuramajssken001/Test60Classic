@@ -172,7 +172,15 @@ void BattleGroundWS::EventPlayerCapturedFlag(Player* source)
 		if (m_TeamScores[TEAM_INDEX_ALLIANCE] < BG_WS_MAX_TEAM_SCORE)
 			m_TeamScores[TEAM_INDEX_ALLIANCE] += 1;
 		PlaySoundToAll(BG_WS_SOUND_FLAG_CAPTURED_ALLIANCE);
-		RewardReputationToTeam(890, m_ReputationCapture, ALLIANCE);
+		if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_WS))
+		{
+			RewardReputationToTeam(890, m_ReputationCapture * 2, ALLIANCE);
+		}
+		else
+		{
+			RewardReputationToTeam(890, m_ReputationCapture, ALLIANCE);
+		}
+		
 	}
 	else
 	{
@@ -186,7 +194,14 @@ void BattleGroundWS::EventPlayerCapturedFlag(Player* source)
 		if (m_TeamScores[TEAM_INDEX_HORDE] < BG_WS_MAX_TEAM_SCORE)
 			m_TeamScores[TEAM_INDEX_HORDE] += 1;
 		PlaySoundToAll(BG_WS_SOUND_FLAG_CAPTURED_HORDE);
-		RewardReputationToTeam(889, m_ReputationCapture, HORDE);
+		if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_WS))
+		{
+			RewardReputationToTeam(889, m_ReputationCapture * 2, HORDE);
+		}
+		else
+		{
+			RewardReputationToTeam(889, m_ReputationCapture, HORDE);
+		}
 	}
 
 	// for flag capture is reward distributed according level range
@@ -220,8 +235,16 @@ void BattleGroundWS::EventPlayerCapturedFlag(Player* source)
 			UpdateWorldState(BG_WS_FLAG_UNK_HORDE, 0);
 			UpdateWorldState(BG_WS_FLAG_STATE_ALLIANCE, 1);
 			UpdateWorldState(BG_WS_FLAG_STATE_HORDE, 1);
-			RewardReputationToTeam(890, 250, ALLIANCE);
-			RewardReputationToTeam(889, 125, HORDE);
+			if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_WS))
+			{
+				RewardReputationToTeam(890, 250 * 2, ALLIANCE);
+				RewardReputationToTeam(889, 125 * 2, HORDE);
+			}
+			else
+			{
+				RewardReputationToTeam(890, 250, ALLIANCE);
+				RewardReputationToTeam(889, 125, HORDE);
+			}
 			EndBattleGround(winner);
 		}
 		else if (source->GetTeam() == HORDE)
@@ -230,8 +253,16 @@ void BattleGroundWS::EventPlayerCapturedFlag(Player* source)
 			UpdateWorldState(BG_WS_FLAG_UNK_HORDE, 0);
 			UpdateWorldState(BG_WS_FLAG_STATE_ALLIANCE, 1);
 			UpdateWorldState(BG_WS_FLAG_STATE_HORDE, 1);
-			RewardReputationToTeam(889, 250, HORDE);
-			RewardReputationToTeam(890, 125, ALLIANCE);
+			if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_WS))
+			{
+				RewardReputationToTeam(889, 250 * 2, HORDE);
+				RewardReputationToTeam(890, 125 * 2, ALLIANCE);
+			}
+			else
+			{
+				RewardReputationToTeam(889, 250, HORDE);
+				RewardReputationToTeam(890, 125, ALLIANCE);
+			}
 			EndBattleGround(winner);
 		}
 	}

@@ -850,6 +850,9 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_BOOL_OUTDOORPVP_EP_ENABLED,                       "OutdoorPvp.EPEnabled", true);
 
 	setConfig(CONFIG_BOOL_BATTLEGROUND_JIANCE, "Battleground.Jiance", false);
+	setConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_AV, "Rate.Reputation.Gain_AV", false);
+	setConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_WS, "Rate.Reputation.Gain_WS", false);
+	setConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_AB, "Rate.Reputation.Gain_AB", false);
 	setConfig(CONFIG_UINT32_BATTLEGROUND_IP_PLAYERCONT, "Battleground.IP_PlayerCont", 1);
 	setConfig(CONFIG_UINT32_BATTLEGROUND_PLAYERCONT_WINNER, "Battleground.Player_Winner", 5);
 	setConfig(CONFIG_UINT32_BATTLEGROUND_PLAYERCONT_LOSER, "Battleground.Player_Loser", 5);
