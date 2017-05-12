@@ -1117,7 +1117,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo* target)
                 case 23893: BTAura = 23887; break;
                 case 23894: BTAura = 23888; break;
                 default:
-                    sLog.outError("Spell::EffectSchoolDMG: Spell %u not handled in BTAura", m_spellInfo->Id);
+                    //sLog.outError("Spell::EffectSchoolDMG: Spell %u not handled in BTAura", m_spellInfo->Id);
                     break;
             }
             if (BTAura)

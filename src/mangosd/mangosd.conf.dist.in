@@ -1826,6 +1826,7 @@ Customsys.OnlineGift.Money = 0
 Command.aoshan = 1
 Command.ZhanGe = 1
 Command.ALX = 1
+Battleground.Guild.On = 1
 ####################################
 #   pvp公告开关
 #   AH 拍卖行公告

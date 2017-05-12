@@ -31,6 +31,7 @@
 #include "Language.h"
 #include "ScriptMgr.h"
 #include "World.h"
+#include "Config/Config.h"
 
 void WorldSession::HandleBattlemasterHelloOpcode(WorldPacket& recv_data)
 {
@@ -320,6 +321,14 @@ void WorldSession::HandleBattlemasterJoinOpcode(WorldPacket& recv_data)
     BattleGroundQueue& bgQueue = sBattleGroundMgr.m_BattleGroundQueues[bgQueueTypeId];
     if (joinAsGroup)
     {
+		if (sConfig.GetBoolDefault("Battleground.Guild.On", false))
+		{
+			if (_player->GetGroup())
+			{
+				ChatHandler(_player).SendSysMessage(LANG_CHANNEL_10);
+				return;
+			}
+		}
         DEBUG_LOG("Battleground: the following players are joining as group:");
         GroupQueueInfo* ginfo = bgQueue.AddGroup(_player, grp, bgTypeId, bgBracketId, isPremade);
         uint32 avgTime = bgQueue.GetAverageQueueWaitTime(ginfo, _player->GetBattleGroundBracketIdFromLevel(bgTypeId));
