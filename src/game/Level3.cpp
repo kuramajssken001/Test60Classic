@@ -369,7 +369,7 @@ bool ChatHandler::HandleReloadConfigCommand(char* /*args*/)
     sWorld.LoadConfigSettings(true);
 	sMod.LoadModConfSettings();
     sMapMgr.InitializeVisibilityDistanceInfo();
-    SendGlobalSysMessage("World config settings reloaded.");
+    //SendGlobalSysMessage("World config settings reloaded.");◊¢ Õ÷ÿ‘ÿÃ· æ
     return true;
 }
 
