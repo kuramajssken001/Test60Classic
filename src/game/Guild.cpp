@@ -706,49 +706,74 @@ void Guild::Disband()
 
 void Guild::Roster(WorldSession* session /*= NULL*/)
 {
-    // we can only guess size
-    WorldPacket data(SMSG_GUILD_ROSTER, (4 + MOTD.length() + 1 + GINFO.length() + 1 + 4 + m_Ranks.size() * 4 + members.size() * 50));
-    data << uint32(members.size());
-    data << MOTD;
-    data << GINFO;
+	// we can only guess size
+	uint32 cont = 1;
+	uint32 conta = 0;
+	WorldPacket data(SMSG_GUILD_ROSTER, (4 + MOTD.length() + 1 + GINFO.length() + 1 + 4 + m_Ranks.size() * 4 + members.size() * 50));
+	if (uint32(members.size()) >= 500)
+	{
+		data << 500;
+		conta = 500;
+	}
+	else
+	{
+		data << uint32(members.size());
+		conta = uint32(members.size());
+	}
+	data << MOTD;
+	data << GINFO;
 
 	data << uint32(m_Ranks.size());
 	for (RankList::const_iterator ritr = m_Ranks.begin(); ritr != m_Ranks.end(); ++ritr)
 		data << uint32(ritr->Rights);
 
-    for (MemberList::const_iterator itr = members.begin(); itr != members.end(); ++itr)
-    {
-        if (Player* pl = ObjectAccessor::FindPlayer(ObjectGuid(HIGHGUID_PLAYER, itr->first)))
-        {
-            data << pl->GetObjectGuid();
-            data << uint8(1);
-            data << pl->GetName();
-            data << uint32(itr->second.RankId);
-            data << uint8(pl->getLevel());
-            data << uint8(pl->getClass());
-            data << uint32(pl->GetZoneId());
-            data << itr->second.Pnote;
-            data << itr->second.OFFnote;
-        }
-        else
-        {
-            data << ObjectGuid(HIGHGUID_PLAYER, itr->first);
-            data << uint8(0);
-            data << itr->second.Name;
-            data << uint32(itr->second.RankId);
-            data << uint8(itr->second.Level);
-            data << uint8(itr->second.Class);
-            data << uint32(itr->second.ZoneId);
-            data << float(float(time(nullptr) - itr->second.LogoutTime) / DAY);
-            data << itr->second.Pnote;
-            data << itr->second.OFFnote;
-        }
-    }
-    if (session)
-        session->SendPacket(&data);
-    else
-        BroadcastPacket(&data);
-    DEBUG_LOG("WORLD: Sent (SMSG_GUILD_ROSTER)");
+	for (MemberList::const_iterator itr = members.begin(); itr != members.end(); ++itr)
+	{
+		if (cont > conta)
+			break;
+		if (Player* pl = ObjectAccessor::FindPlayer(ObjectGuid(HIGHGUID_PLAYER, itr->first)))
+		{
+			data << pl->GetObjectGuid();
+			data << uint8(1);
+			data << pl->GetName();
+			data << uint32(itr->second.RankId);
+			data << uint8(pl->getLevel());
+			data << uint8(pl->getClass());
+			data << uint32(pl->GetZoneId());
+			data << itr->second.Pnote;
+			data << itr->second.OFFnote;
+			++cont;
+		}
+	}
+	for (MemberList::const_iterator itr = members.begin(); itr != members.end(); ++itr)
+	{
+		if (cont > conta)
+			break;
+		if (Player* pl = ObjectAccessor::FindPlayer(ObjectGuid(HIGHGUID_PLAYER, itr->first)))
+		{
+			continue;
+		}
+		else
+		{
+			data << ObjectGuid(HIGHGUID_PLAYER, itr->first);
+			data << uint8(0);
+			data << itr->second.Name;
+			data << uint32(itr->second.RankId);
+			data << uint8(itr->second.Level);
+			data << uint8(itr->second.Class);
+			data << uint32(itr->second.ZoneId);
+			data << float(float(time(NULL) - itr->second.LogoutTime) / DAY);
+			data << itr->second.Pnote;
+			data << itr->second.OFFnote;
+			++cont;
+		}
+	}
+
+	if (session)
+		session->SendPacket(&data);
+	else
+		BroadcastPacket(&data);
+	DEBUG_LOG("WORLD: Sent (SMSG_GUILD_ROSTER)");
 }
 
 void Guild::Query(WorldSession* session)
