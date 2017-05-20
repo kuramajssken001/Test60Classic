@@ -449,10 +449,30 @@ void BattleGroundAB::Reset()
 void BattleGroundAB::EndBattleGround(Team winner)
 {
     // win reward
-    if (winner == ALLIANCE)
+	if (winner == ALLIANCE)
+	{
+		if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_AB))
+		{
+			RewardReputationToTeam(509, 250 * 2, ALLIANCE);
+			RewardReputationToTeam(510, 125 * 2, HORDE);
+			RewardHonorToTeam(BG_AB_WinMatchHonor[5], ALLIANCE);
+		}
+		RewardReputationToTeam(509, 250, ALLIANCE);
+		RewardReputationToTeam(510, 125, HORDE);
 		RewardHonorToTeam(BG_AB_WinMatchHonor[5], ALLIANCE);
-    if (winner == HORDE)
+	}
+	if (winner == HORDE)
+	{
+		if (sWorld.getConfig(CONFIG_BOOL_BATTLEGROUND_REPUTATION_AB))
+		{
+			RewardReputationToTeam(510, 250 * 2, HORDE);
+			RewardReputationToTeam(509, 125 * 2, ALLIANCE);
+			RewardHonorToTeam(BG_AB_WinMatchHonor[5], HORDE);
+		}
+		RewardReputationToTeam(510, 250, HORDE);
+		RewardReputationToTeam(509, 125, ALLIANCE);
 		RewardHonorToTeam(BG_AB_WinMatchHonor[5], HORDE);
+	}
 
     BattleGround::EndBattleGround(winner);
 }
