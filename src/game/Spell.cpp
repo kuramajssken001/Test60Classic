@@ -4913,7 +4913,9 @@ SpellCastResult Spell::CheckCast(bool strict)
                 uint32 lockId = 0;
                 if (GameObject* go = m_targets.getGOTarget())
                 {
-					if (go->GetGoType() == GAMEOBJECT_TYPE_CHEST && go->getLootState() == GO_ACTIVATED && go->GetMapId() && go->GetMapId() < 2)//防止刷箱子
+					//防止刷箱子
+					// Prevent opening two times a chest in same time.
+					if (go->GetGoType() == GAMEOBJECT_TYPE_CHEST && go->getLootState() == GO_ACTIVATED && go->GetMapId() && go->GetMapId() < 2)
 					{
 						if (go->GetMapId() == 0 || go->GetMapId() == 1)
 						{

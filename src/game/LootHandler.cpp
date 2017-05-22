@@ -449,7 +449,6 @@ void WorldSession::DoLootRelease(ObjectGuid lguid)
 					 { go->SetLootState(GO_ACTIVATED); }
 				break;
 			}
-            break;
         }
         case HIGHGUID_CORPSE:                               // ONLY remove insignia at BG
         {
