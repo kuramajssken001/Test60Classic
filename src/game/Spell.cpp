@@ -4913,6 +4913,13 @@ SpellCastResult Spell::CheckCast(bool strict)
                 uint32 lockId = 0;
                 if (GameObject* go = m_targets.getGOTarget())
                 {
+					if (go->GetGoType() == GAMEOBJECT_TYPE_CHEST && go->getLootState() == GO_ACTIVATED && go->GetMapId() && go->GetMapId() < 2)//防止刷箱子
+					{
+						if (go->GetMapId() == 0 || go->GetMapId() == 1)
+						{
+							return SPELL_FAILED_CHEST_IN_USE;
+						}
+					}
                     // In BattleGround players can use only flags and banners
 					if (((Player*)m_caster)->InBattleGround())
 					{
