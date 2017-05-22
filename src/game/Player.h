@@ -897,6 +897,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         explicit Player(WorldSession* session);
         ~Player();
 
+		time_t lastTimeLooted;
         void CleanupsBeforeDelete() override;
 
         static UpdateMask updateVisualBits;

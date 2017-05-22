@@ -813,6 +813,9 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 	{
 		sWorld.SendWorldText(4000, pCurrChar->GetName(), pCurrChar->getLevel());
 	}
+
+	pCurrChar->lastTimeLooted = time(NULL);
+
     delete holder;
 }
 

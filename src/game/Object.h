@@ -236,6 +236,7 @@ class MANGOS_DLL_SPEC Object
         }
 
         void SetFlag(uint16 index, uint32 newFlag);
+		void MarkFlagUpdateForClient(uint16 index);
         void RemoveFlag(uint16 index, uint32 oldFlag);
 
         void ToggleFlag(uint16 index, uint32 flag)
