@@ -9709,6 +9709,14 @@ void Unit::SetContestedPvP(Player* attackedPlayer)
 
     player->SetContestedPvPTimer(30000);
 
+	if (player->GetAreaId() && player->GetAreaId() == 3425)
+	{
+		if (Creature* guard = player->SummonCreature(15184, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation(), TEMPSUMMON_TIMED_OOC_DESPAWN, 10000))
+		{
+			guard->AI()->AttackStart(player);
+		}
+	}
+
     if (!player->hasUnitState(UNIT_STAT_ATTACK_PLAYER))
     {
         player->addUnitState(UNIT_STAT_ATTACK_PLAYER);
