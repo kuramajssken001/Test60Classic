@@ -2275,6 +2275,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         MapReference& GetMapRef() { return m_mapRef; }
 
         bool isAllowedToLoot(Creature* creature);
+		bool IsTappedByMeOrMyGroup(Creature* creature);
 
 		void PlayerLogin();
 		std::string GetPlayerRace(uint32 id);
