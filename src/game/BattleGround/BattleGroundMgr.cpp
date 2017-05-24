@@ -433,7 +433,7 @@ bool BattleGroundQueue::InviteGroupToBG(GroupQueueInfo* ginfo, BattleGround* bg,
             plr->GetSession()->SendPacket(&data);
 
 			// resurrect the player
-			if (!plr->isAlive())
+			/*if (!plr->isAlive())
 			{
 				plr->ResurrectPlayer(1.0f);
 				plr->SpawnCorpseBones();
@@ -444,8 +444,8 @@ bool BattleGroundQueue::InviteGroupToBG(GroupQueueInfo* ginfo, BattleGround* bg,
 				plr->GetMotionMaster()->MovementExpired();
 				plr->m_taxi.ClearTaxiDestinations();
 			}
-			sBattleGroundMgr.BuildBattleGroundStatusPacket(&data, bg, queueSlot, STATUS_IN_PROGRESS, 0, bg->GetStartTime());
-			plr->GetSession()->SendPacket(&data);
+			//sBattleGroundMgr.BuildBattleGroundStatusPacket(&data, bg, queueSlot, STATUS_IN_PROGRESS, 0, bg->GetStartTime());
+			//plr->GetSession()->SendPacket(&data);
 			if (!m_QueuedPlayers.empty())
 				m_QueuedPlayers.erase(plr->GetObjectGuid());
 			if (BattleGround* currentBg = plr->GetBattleGround())
@@ -486,7 +486,7 @@ bool BattleGroundQueue::InviteGroupToBG(GroupQueueInfo* ginfo, BattleGround* bg,
 			if (plr->HasAura(8221))
 				plr->RemoveAurasDueToSpell(8221);
 			if (plr->HasAura(8222))
-				plr->RemoveAurasDueToSpell(8222);
+				plr->RemoveAurasDueToSpell(8222);*/
         }
         return true;
     }
