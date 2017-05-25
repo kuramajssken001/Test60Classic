@@ -1054,6 +1054,14 @@ void GameObject::Use(Unit* user)
                 StartEvents_Event(GetMap(), GetGOInfo()->chest.eventId, user, this);
             }
 
+			if (GetGOInfo()->chest.lootId == 2768)
+			{
+				if (roll_chance_f(8.0f))
+				{
+					user->CastSpell(user, 5968, true);
+				}
+			}
+
             return;
         }
         case GAMEOBJECT_TYPE_GENERIC:                       // 5
