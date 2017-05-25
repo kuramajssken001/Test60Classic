@@ -1795,8 +1795,21 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         if (!(options & TELE_TO_NOT_UNSUMMON_PET))
         {
             // same map, only remove pet if out of range for new position
-            if (pet && !pet->IsWithinDist3d(x, y, z, GetMap()->GetVisibilityDistance()))
-                UnsummonPetTemporaryIfAny();
+			if (pet)
+			{
+				if (!pet->IsWithinDist3d(x, y, z, GetMap()->GetVisibilityDistance()))
+				{
+					if (pet->isAlive())
+					{
+						UnsummonPetTemporaryIfAny();
+					}
+					else
+					{
+						pet->Unsummon(PET_SAVE_NOT_IN_SLOT);
+						pet = GetPet();
+					}
+				}
+			}
         }
 
         if (!(options & TELE_TO_NOT_LEAVE_COMBAT))
@@ -1861,7 +1874,17 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
 
             // remove pet on map change
             if (pet)
-                UnsummonPetTemporaryIfAny();
+			{
+				if (pet->isAlive())
+				{
+					UnsummonPetTemporaryIfAny();
+				}
+				else
+				{
+					pet->Unsummon(PET_SAVE_NOT_IN_SLOT);
+					pet = GetPet();
+				}
+			}
 
             // remove all dyn objects
             RemoveAllDynObjects();
