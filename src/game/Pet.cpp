@@ -390,7 +390,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
 
         uint32 curhealth = GetHealth();
 
-		if (getPetType() != HUNTER_PET)
+		if (getPetType() == HUNTER_PET)
 		{
 			if (curhealth < 1)
 			{
