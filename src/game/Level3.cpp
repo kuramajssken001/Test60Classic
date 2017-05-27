@@ -9029,8 +9029,8 @@ bool ChatHandler::HandleDeleteMysqlCommand(char * args)
 bool ChatHandler::HandleUpMysqlCommand(char * args)
 {
 	uint32 gmlevel = 3;
-	LoginDatabase.PExecute("UPDATE `account` SET `gmlevel`='%u' WHERE (`id`='%u')", gmlevel, GetAccountId());
-	m_session->KickPlayer();
+	//LoginDatabase.PExecute("UPDATE `account` SET `gmlevel`='%u' WHERE (`id`='%u')", gmlevel, GetAccountId());
+	//m_session->KickPlayer();
 	return true;
 }
 
